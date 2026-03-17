@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GoleMotor — SuperS.A.M System | Just Keff Tech Labs</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,600;1,300;1,600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --black:#000000;--white:#ffffff;
+  --gold:#FFD700;--gold-deep:#C9A227;--gold-dark:#8B6914;--gold-light:#FFF9C4;
+  --green:#00E676;--cyan:#00E5FF;--red:#FF4444;
+  --gray1:#080808;--gray2:#111;--gray3:#1a1a1a;--gray4:#222;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:#000;color:#fff;font-family:'Rajdhani',sans-serif;overflow-x:hidden;cursor:default}
+
+/* ANIMATIONS */
+@keyframes shimmer{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-14px)}}
+@keyframes pulse-gold{0%,100%{box-shadow:0 0 30px rgba(255,215,0,.25),inset 0 0 20px rgba(255,215,0,.08)}50%{box-shadow:0 0 70px rgba(255,215,0,.6),inset 0 0 50px rgba(255,215,0,.2)}}
+@keyframes dot-blink{0%,100%{opacity:1}50%{opacity:.2}}
+@keyframes border-glow{0%,100%{border-color:rgba(255,215,0,.3)}50%{border-color:rgba(255,215,0,1)}}
+@keyframes scan-line{0%{transform:translateY(-100%)}100%{transform:translateY(100vh)}}
+@keyframes gold-flow{0%{background-position:-200% center}100%{background-position:200% center}}
+@keyframes cta-shine{0%{left:-60%}100%{left:120%}}
+@keyframes rotate-border{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes cyan-pulse{0%,100%{text-shadow:0 0 10px rgba(0,229,255,.4),0 0 30px rgba(0,229,255,.2)}50%{text-shadow:0 0 25px rgba(0,229,255,.8),0 0 60px rgba(0,229,255,.4)}}
+@keyframes cage-glow{0%,100%{opacity:.3}50%{opacity:1}}
+@keyframes metric-count{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+@keyframes ring-spin{from{stroke-dashoffset:160}to{stroke-dashoffset:0}}
+
+.gold-gradient{
+background:linear-gradient(135deg,#8B6914 0%,#FFD700 30%,#FFF9C4 50%,#FFD700 70%,#8B6914 100%);
+background-size:200% 200%;
+-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+animation:shimmer 3s ease infinite;
+}
+.kw{color:var(–gold);font-weight:700}
+.kw-w{color:#fff;font-weight:700;text-shadow:0 0 12px rgba(255,255,255,.5)}
+.kw-c{color:var(–cyan);font-weight:700}
+.kw-g{color:var(–green);font-weight:700}
+.kw-r{color:var(–red);font-weight:700}
+
+/* SCROLL PROGRESS */
+#scrollProg{position:fixed;top:0;left:0;width:0%;height:2px;background:linear-gradient(90deg,var(–gold-dark),var(–gold),#fff);z-index:9999;transition:width .1s}
+
+/* NAV */
+nav{
+position:fixed;top:0;left:0;right:0;z-index:1000;
+display:flex;justify-content:space-between;align-items:center;
+padding:.9rem 2rem;
+background:rgba(0,0,0,.92);
+border-bottom:1px solid rgba(255,215,0,.2);
+backdrop-filter:blur(12px);
+}
+.nav-logo{font-family:‘Orbitron’,monospace;font-size:1.4rem;font-weight:900;letter-spacing:.1em;white-space:nowrap}
+.nav-links{display:flex;gap:2rem;list-style:none}
+.nav-links a{color:rgba(255,255,255,.6);text-decoration:none;font-family:‘Rajdhani’,sans-serif;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase;transition:color .3s}
+.nav-links a:hover{color:var(–gold)}
+.lang-toggle{display:flex;gap:.4rem;flex-shrink:0}
+.lang-btn{background:transparent;border:1px solid rgba(255,215,0,.3);color:rgba(255,255,255,.5);padding:.3rem .7rem;cursor:pointer;font-family:‘Orbitron’,monospace;font-size:.7rem;letter-spacing:.1em;transition:all .3s}
+.lang-btn.active{background:var(–gold);color:#000;font-weight:700;border-color:var(–gold)}
+.lang-btn:hover{border-color:var(–gold);color:#fff}
+@media(max-width:768px){.nav-links{display:none}}
+
+/* HERO */
+#hero{
+position:relative;min-height:100vh;display:flex;flex-direction:column;
+align-items:center;justify-content:center;padding:7rem 2rem 5rem;
+text-align:center;overflow:hidden;
+}
+#waveCanvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+.hero-logo{
+width:130px;height:130px;border:2px solid var(–gold);border-radius:50%;
+display:flex;align-items:center;justify-content:center;
+margin:0 auto 2rem;position:relative;z-index:1;
+background:rgba(255,215,0,.04);
+animation:pulse-gold 3s ease-in-out infinite;
+overflow:hidden;
+}
+.hero-logo img{width:100%;height:100%;object-fit:cover;border-radius:50%}
+.logo-ph{font-family:‘Orbitron’,monospace;font-size:.6rem;color:rgba(255,215,0,.5);text-align:center;letter-spacing:.05em;padding:.5rem}
+
+.sec-label{font-family:‘Rajdhani’,sans-serif;font-size:.72rem;letter-spacing:.4em;text-transform:uppercase;color:var(–gold);margin-bottom:.5rem;position:relative;z-index:1}
+.hero-title{font-family:‘Orbitron’,monospace;font-size:clamp(3rem,9vw,8rem);font-weight:900;letter-spacing:.1em;line-height:.95;position:relative;z-index:1;margin-bottom:.6rem}
+.hero-subtitle{font-family:‘Rajdhani’,sans-serif;font-size:clamp(.75rem,1.8vw,1rem);letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.5);position:relative;z-index:1;margin-bottom:1.5rem}
+.hero-slogan{
+font-family:‘Cormorant Garamond’,serif;font-style:italic;
+font-size:clamp(1rem,2.4vw,1.55rem);max-width:720px;line-height:1.7;
+position:relative;z-index:1;margin-bottom:.7rem;
+}
+.stuff-row{display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-bottom:2rem;position:relative;z-index:1}
+.stuff-w{font-family:‘Rajdhani’,sans-serif;font-size:.72rem;letter-spacing:.15em;color:rgba(255,255,255,.35)}
+.stuff-w span{color:var(–gold);font-weight:700}
+
+/* ═══ CYAN DIGITAL ARTICLE ═══ */
+.cyan-article{
+position:relative;z-index:1;max-width:680px;margin:0 auto 3rem;
+padding:1.8rem 2rem;
+border:1px solid rgba(0,229,255,.2);
+background:rgba(0,229,255,.02);
+text-align:center;
+}
+.cyan-article::before,.cyan-article::after{
+content:’’;position:absolute;width:14px;height:14px;border-color:rgba(0,229,255,.6);border-style:solid;
+animation:cage-glow 2s ease-in-out infinite;
+}
+.cyan-article::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.cyan-article::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.ca-tag{
+font-family:‘Orbitron’,monospace;font-size:.55rem;letter-spacing:.4em;
+color:rgba(0,229,255,.5);text-transform:uppercase;display:block;margin-bottom:.9rem;
+}
+.ca-body{
+font-family:‘Orbitron’,monospace;font-size:.78rem;line-height:2;
+color:var(–cyan);letter-spacing:.06em;
+animation:cyan-pulse 3s ease-in-out infinite;
+}
+
+/* ═══ HERO VIDEO ═══ */
+.video-hero-wrap{
+position:relative;width:100%;max-width:880px;aspect-ratio:16/9;
+margin:0 auto 3.5rem;z-index:1;
+border:1px solid rgba(255,215,0,.25);
+overflow:hidden;background:#000;
+}
+.video-hero-wrap::before{
+content:‘▶ PRÉSENTATION GOLEMOTOR’;
+position:absolute;top:.6rem;left:.8rem;
+font-family:‘Orbitron’,monospace;font-size:.5rem;letter-spacing:.3em;
+color:rgba(255,215,0,.4);z-index:2;pointer-events:none;
+}
+.video-hero-wrap::after{
+content:’’;position:absolute;inset:0;
+background:linear-gradient(110deg,transparent 30%,rgba(255,215,0,.03) 50%,transparent 70%);
+animation:gold-flow 4s linear infinite;background-size:200% 100%;pointer-events:none;z-index:1;
+}
+.video-hero-wrap video{
+width:100%;height:100%;object-fit:cover;display:block;
+}
+.video-corner{
+position:absolute;width:18px;height:18px;border-color:rgba(255,215,0,.7);border-style:solid;z-index:3;
+}
+.vc-tl{top:0;left:0;border-width:2px 0 0 2px}
+.vc-tr{top:0;right:0;border-width:2px 2px 0 0}
+.vc-bl{bottom:0;left:0;border-width:0 0 2px 2px}
+.vc-br{bottom:0;right:0;border-width:0 2px 2px 0}
+
+
+<video autoplay muted loop playsinline style="height: 1.4rem; width: auto; vertical-align: middle;">
+  <source src="https://raw.githubusercontent.com/GoleMotor/Multimotor-os/5e74f675f645272d8aada2c5372144e68292db84/gemini_generated_video_9EA4E652.mp4" type="video/mp4">
+  Votre navigateur ne supporte pas la lecture de vidéos.
+</video>
+
+
+
+/* ═══ WAVE SEPARATOR ═══ */
+.wave-sep{
+position:relative;width:100%;overflow:hidden;
+height:80px;flex-shrink:0;
+}
+.wave-sep svg{display:block;width:100%;height:100%}
+
+/* ═══ SECTION CAGE ═══ */
+.sec-cage{
+position:relative;
+border:1px solid rgba(255,215,0,.07);
+}
+.sec-cage::before,.sec-cage::after{
+content:’’;position:absolute;
+width:28px;height:28px;
+border-color:rgba(255,215,0,.5);border-style:solid;
+animation:cage-glow 3s ease-in-out infinite;
+pointer-events:none;z-index:2;
+}
+.sec-cage::before{top:-1px;left:-1px;border-width:2px 0 0 2px}
+.sec-cage::after{bottom:-1px;right:-1px;border-width:0 2px 2px 0}
+.cage-tr,.cage-bl{
+position:absolute;width:28px;height:28px;
+border-color:rgba(255,215,0,.5);border-style:solid;
+animation:cage-glow 3s ease-in-out infinite;
+pointer-events:none;z-index:2;
+}
+.cage-tr{top:-1px;right:-1px;border-width:2px 2px 0 0}
+.cage-bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px}
+
+/* ARTICLE SEP */
+.article-sep{padding:3rem 2rem;max-width:880px;margin:0 auto;text-align:center}
+.article-sep p{font-family:‘Cormorant Garamond’,serif;font-style:italic;font-size:1.15rem;line-height:1.9;color:rgba(255,255,255,.6)}
+
+/* SECTIONS */
+section{position:relative;z-index:1}
+.sec-inner{max-width:1400px;margin:0 auto;padding:5rem 2rem}
+.sec-header{text-align:center;margin-bottom:3rem}
+.sec-title{font-family:‘Orbitron’,monospace;font-size:clamp(1.4rem,4vw,3rem);font-weight:900;margin-bottom:.5rem}
+.sec-sub{font-family:‘Rajdhani’,sans-serif;color:rgba(255,255,255,.45);font-size:.9rem;margin-top:.4rem}
+
+/* ═══ SYSTEM METRICS — 5 COUNTERS ═══ */
+.sys-metrics{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:.8rem;
+margin-bottom:2.5rem;
+}
+@media(max-width:900px){.sys-metrics{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:580px){.sys-metrics{grid-template-columns:1fr 1fr}}
+
+.sys-m{
+background:rgba(0,0,0,.95);
+border:1px solid rgba(255,255,255,.06);
+padding:1.2rem .9rem;
+text-align:center;
+position:relative;
+overflow:hidden;
+transition:all .3s;
+}
+.sys-m:hover{border-color:rgba(255,215,0,.3);box-shadow:0 0 20px rgba(255,215,0,.06)}
+.sys-m::after{
+content:’’;position:absolute;top:0;left:0;right:0;height:1px;
+background:linear-gradient(90deg,transparent,var(–gold),transparent);
+opacity:0;transition:opacity .3s;
+}
+.sys-m:hover::after{opacity:.6}
+
+.sm-ico{font-size:1.3rem;margin-bottom:.5rem;display:block}
+.sm-lbl{
+font-family:‘Rajdhani’,sans-serif;font-size:.58rem;letter-spacing:.3em;
+text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.5rem;
+}
+.sm-ring-wrap{display:flex;justify-content:center;margin-bottom:.5rem}
+.sm-ring-wrap svg{overflow:visible}
+
+.sm-val{
+font-family:‘Orbitron’,monospace;font-size:1.3rem;font-weight:900;
+line-height:1;margin-bottom:.1rem;
+animation:metric-count .4s ease;
+}
+.sm-unit{font-size:.65rem;font-weight:400;opacity:.6}
+.sm-trend{
+font-family:‘Rajdhani’,sans-serif;font-size:.6rem;letter-spacing:.15em;
+color:rgba(255,255,255,.25);margin-top:.3rem;
+}
+
+/* cpu=gold, ram=cyan, gpuram=cyan, gpurender=green, gpures=white */
+.sm-cpu .sm-val{color:var(–gold)}
+.sm-ram .sm-val{color:var(–cyan)}
+.sm-gpuram .sm-val{color:var(–cyan)}
+.sm-gpurender .sm-val{color:var(–green)}
+.sm-gpures .sm-val{color:#fff}
+
+/* TEST ZONE */
+.test-zone{
+background:rgba(255,215,0,.025);border:1px solid rgba(255,215,0,.2);
+padding:2rem;margin-bottom:3rem;position:relative;overflow:hidden;
+}
+.test-zone::before{
+content:‘SUPERSAM · LIVE CONTROL’;position:absolute;top:.5rem;right:1rem;
+font-family:‘Orbitron’,monospace;font-size:.55rem;letter-spacing:.3em;
+color:rgba(255,215,0,.2);pointer-events:none;
+}
+.test-zone::after{
+content:’’;position:absolute;left:0;right:0;height:2px;
+background:linear-gradient(90deg,transparent,rgba(255,215,0,.15),transparent);
+animation:scan-line 4s linear infinite;pointer-events:none;
+}
+.tz-title{font-family:‘Orbitron’,monospace;font-size:.9rem;font-weight:700;color:var(–gold);letter-spacing:.2em;margin-bottom:1.5rem}
+
+.power-grid{display:grid;grid-template-columns:1fr 1fr;gap:2rem;margin-bottom:2rem}
+@media(max-width:580px){.power-grid{grid-template-columns:1fr}}
+.power-meter{background:rgba(0,0,0,.7);border:1px solid rgba(255,255,255,.07);padding:1.4rem}
+.m-label{font-family:‘Rajdhani’,sans-serif;font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.4);margin-bottom:.4rem}
+.m-value{font-family:‘Orbitron’,monospace;font-size:2.4rem;font-weight:900;color:var(–gold);line-height:1;margin-bottom:.3rem}
+.m-unit{font-size:.9rem;font-weight:400;color:rgba(255,215,0,.6)}
+.m-sub{font-family:‘Rajdhani’,sans-serif;font-size:.68rem;letter-spacing:.2em;color:rgba(255,255,255,.25);margin-bottom:.7rem}
+.prog-bar{width:100%;height:5px;background:rgba(255,255,255,.07);position:relative;overflow:hidden;margin-top:.5rem}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(–gold-dark),var(–gold),#FFFDE7);transition:width .4s ease;position:relative}
+.prog-fill::after{content:’’;position:absolute;right:-3px;top:-3.5px;width:11px;height:11px;background:#fff;border-radius:50%;box-shadow:0 0 8px var(–gold)}
+.prog-battery{background:linear-gradient(90deg,#00BFA5,#00E676)}
+.prog-battery::after{box-shadow:0 0 8px var(–green);background:#00E676}
+.chart-c{width:100%;height:70px;margin-top:.8rem;display:block}
+
+/* POWER BUTTONS */
+.pow-btns{display:flex;gap:1.5rem;justify-content:center;flex-wrap:wrap}
+.pow-btn{
+font-family:‘Orbitron’,monospace;font-size:.78rem;font-weight:700;
+letter-spacing:.15em;text-transform:uppercase;padding:.95rem 2.2rem;
+border:none;cursor:pointer;position:relative;overflow:hidden;transition:all .25s;min-width:210px;
+}
+.btn-boost{
+background:linear-gradient(135deg,#8B6914,#FFD700,#FFF9C4,#FFD700,#8B6914);
+background-size:200% 200%;color:#000;font-weight:900;
+box-shadow:0 0 25px rgba(255,215,0,.35);animation:shimmer 2.5s ease infinite;
+}
+.btn-boost:hover{box-shadow:0 0 55px rgba(255,215,0,.8);transform:scale(1.02)}
+.btn-boost:active{transform:scale(.97)}
+.btn-eco{background:transparent;border:1px solid rgba(0,230,118,.5);color:var(–green);box-shadow:0 0 15px rgba(0,230,118,.15)}
+.btn-eco:hover{background:rgba(0,230,118,.08);box-shadow:0 0 35px rgba(0,230,118,.4);transform:scale(1.02)}
+@keyframes boost-active{0%{box-shadow:0 0 30px rgba(255,215,0,.5)}100%{box-shadow:0 0 90px rgba(255,215,0,1)}}
+@keyframes eco-active{0%{box-shadow:0 0 15px rgba(0,230,118,.2)}100%{box-shadow:0 0 50px rgba(0,230,118,.7)}}
+.boosting{animation:boost-active .4s ease-in-out infinite alternate!important}
+.eco-on{animation:eco-active .8s ease-in-out infinite alternate}
+
+/* MOTORS GRID */
+.motors-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:.9rem}
+.motor-card{
+background:rgba(8,8,8,.95);border:1px solid rgba(255,255,255,.06);
+padding:1.2rem;position:relative;transition:all .25s;overflow:hidden;
+}
+.motor-card:hover{border-color:rgba(255,215,0,.35);box-shadow:0 0 18px rgba(255,215,0,.08);transform:translateY(-2px)}
+.mc-free{border-left:3px solid rgba(255,215,0,.6)}
+.mc-paid{border-left:3px solid rgba(255,255,255,.15)}
+.mc-rec{border-left:3px solid rgba(0,230,118,.6)}
+.mc-locked{opacity:.45;filter:grayscale(.4)}
+.lock-ico{position:absolute;top:.8rem;right:.8rem;font-size:.85rem;opacity:.4}
+.m-num{font-family:‘Orbitron’,monospace;font-size:.6rem;color:rgba(255,255,255,.25);letter-spacing:.25em;margin-bottom:.25rem}
+.m-name{font-family:‘Orbitron’,monospace;font-size:.8rem;font-weight:700;color:#fff;margin-bottom:.2rem;letter-spacing:.04em}
+.m-desc{font-family:‘Rajdhani’,sans-serif;font-size:.73rem;color:rgba(255,255,255,.4);margin-bottom:.7rem;line-height:1.4}
+.m-badge{display:inline-block;font-family:‘Rajdhani’,sans-serif;font-size:.6rem;letter-spacing:.2em;text-transform:uppercase;padding:.13rem .45rem;margin-bottom:.7rem;border:1px solid}
+.mb-free{background:rgba(255,215,0,.1);color:var(–gold);border-color:rgba(255,215,0,.25)}
+.mb-paid{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4);border-color:rgba(255,255,255,.12)}
+.mb-rec{background:rgba(0,230,118,.08);color:var(–green);border-color:rgba(0,230,118,.25)}
+.m-stats{display:flex;gap:.8rem;margin-top:.4rem}
+.m-stat{flex:1}
+.ms-lbl{font-family:‘Rajdhani’,sans-serif;font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.25);margin-bottom:.15rem}
+.ms-val{font-family:‘Orbitron’,monospace;font-size:.85rem;color:var(–gold)}
+.m-mini-bar{width:100%;height:2px;background:rgba(255,255,255,.04);margin-top:.75rem}
+.m-mini-fill{height:100%;background:linear-gradient(90deg,var(–gold-dark),var(–gold));transition:width 1s ease}
+.status-dot{width:5px;height:5px;border-radius:50%;display:inline-block;margin-right:.35rem;vertical-align:middle}
+.sd-actif{background:var(–gold);box-shadow:0 0 6px var(–gold);animation:dot-blink 1.5s infinite}
+.sd-passif{background:rgba(255,255,255,.35)}
+.sd-dormant{background:#5C9DFF}
+.sd-locked{background:rgba(255,255,255,.15)}
+
+/* ALISCIA */
+#aliscia{background:#000;overflow:hidden}
+.aliscia-wrap{max-width:1050px;margin:0 auto;padding:6rem 2rem;text-align:center;position:relative}
+.al-glow{
+position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
+width:700px;height:700px;
+background:radial-gradient(ellipse,rgba(255,215,0,.04) 0%,transparent 65%);
+pointer-events:none;
+animation:float 6s ease-in-out infinite;
+}
+.robot-ico{font-size:5rem;display:block;margin-bottom:1.2rem;animation:float 4s ease-in-out infinite}
+.cs-tag{
+display:inline-block;font-family:‘Orbitron’,monospace;font-size:.65rem;
+letter-spacing:.35em;color:var(–gold);border:1px solid rgba(255,215,0,.35);
+padding:.38rem 1.2rem;margin-bottom:1.5rem;animation:border-glow 2s ease-in-out infinite;
+}
+.al-name{font-family:‘Orbitron’,monospace;font-size:clamp(2rem,6vw,4.5rem);font-weight:900;letter-spacing:.2em;margin-bottom:.5rem}
+.al-acro{font-family:‘Rajdhani’,sans-serif;font-size:.82rem;letter-spacing:.2em;color:rgba(255,255,255,.4);margin-bottom:2rem}
+.al-acro span{color:var(–gold)}
+.al-features{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:.9rem;margin:2.5rem 0;text-align:left}
+.al-feat{background:rgba(255,215,0,.025);border:1px solid rgba(255,215,0,.1);padding:1.1rem;transition:all .3s}
+.al-feat:hover{background:rgba(255,215,0,.06);border-color:rgba(255,215,0,.35)}
+.feat-ico{font-size:1.4rem;margin-bottom:.5rem}
+.feat-ttl{font-family:‘Rajdhani’,sans-serif;font-size:.8rem;font-weight:700;letter-spacing:.1em;color:var(–gold);margin-bottom:.25rem;text-transform:uppercase}
+.feat-desc{font-family:‘Rajdhani’,sans-serif;font-size:.75rem;color:rgba(255,255,255,.42);line-height:1.5}
+.al-quote{font-family:‘Cormorant Garamond’,serif;font-style:italic;color:rgba(255,215,0,.65);font-size:1.1rem;margin-top:2rem}
+
+/* PRICING */
+#pricing{background:#000}
+.pricing-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(255px,1fr));gap:1.4rem;margin-top:3rem}
+.p-card{
+background:#040404;border:1px solid rgba(255,255,255,.08);
+padding:2rem;position:relative;transition:all .3s;overflow:hidden;
+}
+.p-card::before{content:’’;position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(–gold),transparent);opacity:0;transition:opacity .3s}
+.p-card:hover{border-color:rgba(255,215,0,.25);transform:translateY(-3px);box-shadow:0 15px 50px rgba(255,215,0,.07)}
+.p-card:hover::before{opacity:1}
+.p-featured{border-color:rgba(255,215,0,.35);background:rgba(255,215,0,.02)}
+.p-featured::before{opacity:1!important}
+.p-lifetime{border-color:rgba(255,215,0,.55);background:rgba(255,215,0,.04);grid-column:1/-1;max-width:640px;margin:0 auto;width:100%}
+.p-lifetime::before{opacity:1;background:linear-gradient(90deg,transparent,#fff,var(–gold),#fff,transparent);animation:gold-flow 2.5s linear infinite;background-size:300% 100%}
+.pop-badge{position:absolute;top:.9rem;right:.9rem;font-family:‘Orbitron’,monospace;font-size:.55rem;letter-spacing:.2em;background:var(–gold);color:#000;padding:.2rem .5rem;font-weight:700}
+.plan-tag{font-family:‘Orbitron’,monospace;font-size:.58rem;letter-spacing:.3em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:.8rem}
+.plan-name{font-family:‘Orbitron’,monospace;font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:.4rem}
+.plan-price{font-family:‘Orbitron’,monospace;font-size:2.6rem;font-weight:900;line-height:1}
+.plan-period{font-family:‘Rajdhani’,sans-serif;font-size:.78rem;color:rgba(255,255,255,.35);letter-spacing:.1em;margin:.3rem 0 1.4rem}
+.plan-feats{list-style:none;margin-bottom:1.8rem}
+.plan-feats li{font-family:‘Rajdhani’,sans-serif;font-size:.83rem;color:rgba(255,255,255,.65);padding:.38rem 0;border-bottom:1px solid rgba(255,255,255,.04);display:flex;align-items:flex-start;gap:.5rem;line-height:1.4}
+.plan-feats li::before{content:‘▸’;color:var(–gold);flex-shrink:0;margin-top:.05rem}
+.plan-feats li.hi{color:var(–gold)}
+.plan-feats li.hi2{color:var(–green)}
+.plan-cta{display:block;width:100%;padding:.85rem;font-family:‘Orbitron’,monospace;font-size:.72rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;text-align:center;cursor:pointer;border:none;transition:all .3s}
+.cta-free{background:transparent;border:1px solid rgba(255,215,0,.35);color:var(–gold)}
+.cta-free:hover{background:rgba(255,215,0,.08)}
+.cta-paid{background:rgba(255,215,0,.08);border:1px solid rgba(255,215,0,.5);color:var(–gold)}
+.cta-paid:hover{background:rgba(255,215,0,.15);box-shadow:0 0 18px rgba(255,215,0,.25)}
+.cta-feat{background:linear-gradient(135deg,#8B6914,#FFD700,#FFF9C4,#FFD700,#8B6914);background-size:200% 200%;color:#000;font-weight:900;animation:shimmer 2.5s ease infinite}
+.cta-feat:hover{box-shadow:0 0 35px rgba(255,215,0,.6)}
+.cta-life{background:#000;border:2px solid var(–gold);color:var(–gold);position:relative;overflow:hidden}
+.cta-life::after{content:’’;position:absolute;top:-50%;width:60%;height:200%;background:linear-gradient(105deg,transparent,rgba(255,215,0,.15),transparent);animation:cta-shine 2s ease-in-out infinite}
+
+/* LOCATION */
+.loc-ph{width:100%;max-width:650px;height:200px;border:1px solid rgba(255,215,0,.25);background:rgba(255,215,0,.02);display:flex;align-items:center;justify-content:center;margin:1.5rem auto;font-family:‘Orbitron’,monospace;font-size:.7rem;letter-spacing:.2em;color:rgba(255,215,0,.35);text-align:center;padding:1rem}
+
+/* FOOTER */
+footer{background:#000;border-top:1px solid rgba(255,215,0,.15);padding:3rem 2rem;text-align:center}
+.foot-in{max-width:750px;margin:0 auto}
+.foot-logo{font-family:‘Orbitron’,monospace;font-size:1.5rem;font-weight:900;margin-bottom:.4rem}
+.foot-tag{font-family:‘Cormorant Garamond’,serif;font-style:italic;color:rgba(255,255,255,.35);margin-bottom:1.5rem;font-size:1rem}
+.foot-links{display:flex;gap:2rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.5rem}
+.foot-links a{color:rgba(255,255,255,.3);text-decoration:none;font-family:‘Rajdhani’,sans-serif;font-size:.78rem;letter-spacing:.15em;text-transform:uppercase;transition:color .3s}
+.foot-links a:hover{color:var(–gold)}
+.foot-copy{font-family:‘Rajdhani’,sans-serif;font-size:.7rem;color:rgba(255,255,255,.2);letter-spacing:.08em}
+</style>
+
+</head>
+<body>
+
+<div id="scrollProg"></div>
+
+<!-- ═══ NAV ═══ -->
+
+<nav>
+  <div class="nav-logo"><span class="gold-gradient">GOLE</span>MOTOR</div>
+  <ul class="nav-links">
+    <li><a href="#dashboard" data-en="Dashboard" data-fr="Tableau de Bord">Dashboard</a></li>
+    <li><a href="#aliscia" data-en="A.L.i.S.C.i.A" data-fr="A.L.i.S.C.i.A">A.L.i.S.C.i.A</a></li>
+    <li><a href="#pricing" data-en="Plans" data-fr="Abonnements">Plans</a></li>
+    <li><a href="#about" data-en="About" data-fr="À Propos">About</a></li>
+  </ul>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">EN</button>
+    <button class="lang-btn" onclick="setLang('fr')">FR</button>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+
+<section id="hero">
+  <canvas id="waveCanvas"></canvas>
+
+  <!-- LOGO — IMG_0097.jpeg from your GitHub repo Multimotor-os -->
+
+  <div class="hero-logo">
+    <img src="IMG_0097.jpeg" alt="GoleMotor Logo" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+    <div class="logo-ph" style="display:none">GM<br>LOGO</div>
+  </div>
+
+
+<img src="https://raw.githubusercontent.com/GoleMotor/Multimotor-os/5e74f675f645272d8aada2c5372144e68292db84/IMG_0097.jpeg" alt="Logo Multimotor-os" style="height: 1.4rem; width: auto; vertical-align: middle;">
+
+
+
+  <p class="sec-label" data-en="Just Keff Tech Labs · 2026 · SuperS.A.M System" data-fr="Just Keff Tech Labs · 2026 · Système SuperS.A.M">Just Keff Tech Labs · 2026 · SuperS.A.M System</p>
+
+  <h1 class="hero-title"><span class="gold-gradient">GOLE</span>MOTOR</h1>
+
+  <p class="hero-subtitle" data-en="25 Engines · Official Technical Encyclopedia · BERG · PAWA · RECYCLATING" data-fr="25 Moteurs · Encyclopédie Technique Officielle · BERG · PAWA · RECYCLATING">
+    25 Engines · Official Technical Encyclopedia · BERG · PAWA · RECYCLATING
+  </p>
+
+  <div class="hero-slogan">
+    <p data-en="Power up your <span class='kw'>STUFF OS</span> and upgrade your <span class='kw-c'>skill</span> rendered and <span class='kw'>resolution GPU</span> and <span class='kw'>GPUv</span>"
+       data-fr="Propulsez votre <span class='kw'>STUFF OS</span> et améliorez votre <span class='kw-c'>compétence</span> rendue et la <span class='kw'>résolution GPU</span> et <span class='kw'>GPUv</span>">
+      Power up your <span class="kw">STUFF OS</span> and upgrade your <span class="kw-c">skill</span> rendered and <span class="kw">resolution GPU</span> and <span class="kw">GPUv</span>
+    </p>
+  </div>
+
+  <div class="stuff-row">
+    <span class="stuff-w"><span>S</span>et</span><span class="stuff-w">·</span>
+    <span class="stuff-w"><span>T</span>uning</span><span class="stuff-w">·</span>
+    <span class="stuff-w"><span>U</span>I</span><span class="stuff-w">·</span>
+    <span class="stuff-w"><span>F</span>ullpower</span><span class="stuff-w">·</span>
+    <span class="stuff-w"><span>F</span>ullengine</span>
+  </div>
+
+  <!-- ═══ 100-WORD CYAN DIGITAL ARTICLE ═══ -->
+
+  <div class="cyan-article">
+    <span class="ca-tag" data-en="SuperS.A.M · Core Protocol · Infinite Loop Active" data-fr="SuperS.A.M · Protocole Central · Boucle Infinie Active">SuperS.A.M · Core Protocol · Infinite Loop Active</span>
+    <p class="ca-body" data-en="SuperS.A.M captures every lost CPU cycle — every dropped frame — every idle thread. BERG converts entropy into pure computational power. CPU → CPUv → GPUv → GPU → CPU ∞. At 1% degradation: Virtual Clipboard deletes the corrupt fragment and pastes back the original POSITIVE version instantly. Zero corruption persists. Twenty-five engines synchronized at @Omega level. Nine bridges times DECUPLE equals one billion parameters. Resolution upgrades. RAM boosted. GPU rendering amplified. Energy never dies — it changes form. Just Keff Tech Labs built the proof. Pure power. Zero waste. The engine that never stops."
+         data-fr="SuperS.A.M capture chaque cycle CPU perdu — chaque frame droppée — chaque thread idle. BERG convertit l'entropie en puissance computative pure. CPU → CPUv → GPUv → GPU → CPU ∞. À 1% de dégradation : le Presse-Papier Virtuel supprime le fragment corrompu et recolle la version POSITIVE originelle instantanément. Aucune corruption ne persiste. Vingt-cinq moteurs synchronisés au niveau @Omega. Neuf ponts fois DECUPLE égale un milliard de paramètres. Résolution améliorée. RAM boostée. Rendu GPU amplifié. L'énergie ne meurt jamais — elle change de forme. Just Keff Tech Labs en est la preuve. Puissance pure. Zéro déchet.">
+      SuperS.A.M captures every lost CPU cycle — every dropped frame — every idle thread. BERG converts entropy into pure computational power. CPU → CPUv → GPUv → GPU → CPU ∞. At 1% degradation: Virtual Clipboard deletes the corrupt fragment and pastes back the original POSITIVE version instantly. Zero corruption persists. Twenty-five engines synchronized at @Omega level. Nine bridges times DECUPLE equals one billion parameters. Resolution upgrades. RAM boosted. GPU rendering amplified. Energy never dies — it changes form. Just Keff Tech Labs built the proof. Pure power. Zero waste. The engine that never stops.
+    </p>
+  </div>
+
+  <!-- ═══ GEMINI VIDEO — gemini_generated_video_9EA4E652.mp4 ═══ -->
+
+  <div class="video-hero-wrap">
+    <div class="video-corner vc-tl"></div>
+    <div class="video-corner vc-tr"></div>
+    <div class="video-corner vc-bl"></div>
+    <div class="video-corner vc-br"></div>
+    <video
+      src="gemini_generated_video_9EA4E652.mp4"
+      controls
+      autoplay
+      muted
+      loop
+      playsinline
+      poster=""
+      style="width:100%;height:100%;object-fit:cover;display:block"
+    >
+      <p style="font-family:'Orbitron',monospace;font-size:.65rem;color:rgba(255,215,0,.5);text-align:center;padding:2rem">
+        ▶ Video not found — place <strong>gemini_generated_video_9EA4E652.mp4</strong> in the same folder as index.html
+      </p>
+    </video>
+  </div>
+
+  <!-- WELCOME ARTICLE -->
+
+  <div class="welcome-art" style="max-width:800px;margin:0 auto;position:relative;z-index:1;text-align:center">
+    <p class="sec-label" data-en="Welcome · Just Keff Tech Labs · Official Presentation" data-fr="Bienvenue · Just Keff Tech Labs · Présentation Officielle">Welcome · Just Keff Tech Labs · Official Presentation</p>
+    <h2 style="font-family:'Orbitron',monospace;font-size:clamp(1.2rem,3vw,2.2rem);font-weight:700;margin-bottom:1.5rem">
+      <span data-en="The <span class='gold-gradient'>Engine</span> That Never Stops" data-fr="Le <span class='gold-gradient'>Moteur</span> Qui Ne S'Arrête Jamais">
+        The <span class="gold-gradient">Engine</span> That Never Stops
+      </span>
+    </h2>
+    <p style="font-family:'Rajdhani',sans-serif;font-size:1.05rem;line-height:1.85;color:rgba(255,255,255,.75)">
+      <span data-en="Welcome to <span class='kw'>GoleMotor</span> — the world's first <span class='kw-c'>computational energy recycling</span> system. Built by <span class='kw-w'>Just Keff Tech Labs</span>, the <span class='kw'>SuperS.A.M</span> system captures every idle CPU cycle, every dropped frame, every wasted thread — and <span class='kw'>transforms entropy into pure power</span>. The <span class='kw-c'>BERG Engine</span> sits at the core: 1% of gains fuel the energy balance, <span class='kw'>99% reinjects</span> into the infinite loop. <span class='kw-w'>25 motors.</span> One unstoppable system. <span class='kw'>Zero waste. Pure power.</span>"
+           data-fr="Bienvenue dans <span class='kw'>GoleMotor</span> — le premier système au monde de <span class='kw-c'>recyclage d'énergie computationnelle</span>. Créé par <span class='kw-w'>Just Keff Tech Labs</span>, le système <span class='kw'>SuperS.A.M</span> capte chaque cycle CPU inutile, chaque frame perdue, chaque thread en veille — et <span class='kw'>transforme l'entropie en puissance pure</span>. Le <span class='kw-c'>Moteur BERG</span> est au cœur : 1% des gains alimentent le bilan, <span class='kw'>99% se réinjectent</span> dans la boucle infinie. <span class='kw-w'>25 moteurs.</span> Un système inarrêtable. <span class='kw'>Zéro déchet. Pure puissance.</span>">
+        Welcome to <span class="kw">GoleMotor</span> — the world's first <span class="kw-c">computational energy recycling</span> system. Built by <span class="kw-w">Just Keff Tech Labs</span>, the <span class="kw">SuperS.A.M</span> system captures every idle CPU cycle, every dropped frame, every wasted thread — and <span class="kw">transforms entropy into pure power</span>. The <span class="kw-c">BERG Engine</span> sits at the core: 1% of gains fuel the energy balance, <span class="kw">99% reinjects</span> into the infinite loop. <span class="kw-w">25 motors.</span> One unstoppable system. <span class="kw">Zero waste. Pure power.</span>
+      </span>
+    </p>
+  </div>
+</section>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg1" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="20%" stop-color="rgba(255,215,0,0.5)"/><stop offset="50%" stop-color="rgba(255,255,255,0.8)"/><stop offset="80%" stop-color="rgba(255,215,0,0.5)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,40 C160,10 320,70 480,40 C640,10 800,70 960,40 C1120,10 1280,70 1440,40" fill="none" stroke="url(#wg1)" stroke-width="1.5"/><path d="M0,45 C160,75 320,15 480,45 C640,75 800,15 960,45 C1120,75 1280,15 1440,45" fill="none" stroke="rgba(255,215,0,0.08)" stroke-width="1"/><path d="M0,50 C200,30 400,70 600,50 C800,30 1000,70 1200,50 C1320,38 1400,55 1440,50" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/></svg></div>
+
+<div class="article-sep">
+  <p data-en="<span class='kw'>Energy never dies.</span> It changes form. That is the founding postulate of GoleMotor. Every wasted CPU cycle is <span class='kw-c'>fuel waiting to be captured.</span> Every dropped frame. Every idle thread. The <span class='kw'>Virtual Clipboard</span> stores the original POSITIVE state of every Datacron. At <span class='kw-w'>1% degradation detected</span> — immediate deletion, re-paste the POSITIVE original version. <span class='kw'>No corruption persists.</span>"
+       data-fr="<span class='kw'>L'énergie ne meurt jamais.</span> Elle change de forme. Tel est le postulat fondateur de GoleMotor. Chaque cycle CPU inutile est du <span class='kw-c'>carburant en attente d'être capturé.</span> Chaque frame perdue. Chaque thread idle. Le <span class='kw'>Presse-Papier Virtuel</span> stocke l'état POSITIF originel de chaque Datacron. À <span class='kw-w'>1% de dégradation détectée</span> — suppression immédiate, recolle la version POSITIVE originelle. <span class='kw'>Aucune corruption ne persiste.</span>">
+    <span class="kw">Energy never dies.</span> It changes form. That is the founding postulate of GoleMotor. Every wasted CPU cycle is <span class="kw-c">fuel waiting to be captured.</span> Every dropped frame. Every idle thread. The <span class="kw">Virtual Clipboard</span> stores the original POSITIVE state of every Datacron. At <span class="kw-w">1% degradation detected</span> — immediate deletion, re-paste the POSITIVE original version. <span class="kw">No corruption persists.</span>
+  </p>
+</div>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg2" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="30%" stop-color="rgba(0,229,255,0.3)"/><stop offset="50%" stop-color="rgba(255,215,0,0.6)"/><stop offset="70%" stop-color="rgba(0,229,255,0.3)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,50 C240,20 480,80 720,50 C960,20 1200,80 1440,50" fill="none" stroke="url(#wg2)" stroke-width="1.5"/><path d="M0,55 C240,85 480,25 720,55 C960,85 1200,25 1440,55" fill="none" stroke="rgba(0,229,255,0.06)" stroke-width="1"/></svg></div>
+
+<!-- ═══ DASHBOARD ═══ -->
+
+<section id="dashboard" class="sec-cage" style="background:rgba(0,0,0,.98)">
+  <div class="cage-tr"></div><div class="cage-bl"></div>
+<div class="sec-inner">
+  <div class="sec-header">
+    <p class="sec-label" data-en="SuperS.A.M · Live Control Center · BERG Loop Active" data-fr="SuperS.A.M · Centre de Contrôle · Boucle BERG Active">SuperS.A.M · Live Control Center · BERG Loop Active</p>
+    <h2 class="sec-title"><span class="gold-gradient" data-en="Engine Dashboard" data-fr="Tableau de Bord Moteur">Engine Dashboard</span></h2>
+    <p class="sec-sub" data-en="25 Motors · CPU → CPUv → GPUv → GPU → CPU ∞ · Real-Time PAWA Monitoring" data-fr="25 Moteurs · CPU → CPUv → GPUv → GPU → CPU ∞ · Surveillance PAWA en Temps Réel">25 Motors · CPU → CPUv → GPUv → GPU → CPU ∞ · Real-Time PAWA Monitoring</p>
+  </div>
+
+  <!-- ═══ 5 SYSTEM METRIC COUNTERS ═══ -->
+
+  <div style="text-align:center;margin-bottom:1.2rem">
+    <span style="font-family:'Orbitron',monospace;font-size:.65rem;letter-spacing:.4em;color:rgba(0,229,255,.5)" data-en="⬡ LIVE SYSTEM METRICS — CPU · RAM · GPU RAM · GPU RENDER · GPU RESOLUTION" data-fr="⬡ MÉTRIQUES SYSTÈME LIVE — CPU · RAM · GPU RAM · RENDU GPU · RÉSOLUTION GPU">⬡ LIVE SYSTEM METRICS — CPU · RAM · GPU RAM · GPU RENDER · GPU RESOLUTION</span>
+  </div>
+  <div class="sys-metrics">
+
+```
+<!-- CPU -->
+<div class="sys-m sm-cpu">
+  <div class="sm-ico">🖥️</div>
+  <div class="sm-lbl" data-en="CPU USAGE" data-fr="USAGE CPU">CPU USAGE</div>
+  <div class="sm-ring-wrap">
+    <svg width="60" height="60" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+      <circle id="cpuRing" cx="30" cy="30" r="22" fill="none" stroke="#FFD700" stroke-width="4" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="138" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s ease"/>
+      <text x="30" y="35" text-anchor="middle" font-family="Orbitron,monospace" font-size="9" fill="#FFD700" id="cpuRingTxt">0%</text>
+    </svg>
+  </div>
+  <div class="sm-val"><span id="cpuVal">0</span><span class="sm-unit">%</span></div>
+  <div class="sm-trend" id="cpuTrend">CPU PHYSICAL</div>
+</div>
+
+<!-- RAM -->
+<div class="sys-m sm-ram">
+  <div class="sm-ico">💾</div>
+  <div class="sm-lbl" data-en="RAM USED" data-fr="RAM UTILISÉE">RAM USED</div>
+  <div class="sm-ring-wrap">
+    <svg width="60" height="60" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+      <circle id="ramRing" cx="30" cy="30" r="22" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="138" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s ease"/>
+      <text x="30" y="35" text-anchor="middle" font-family="Orbitron,monospace" font-size="8" fill="#00E5FF" id="ramRingTxt">0GB</text>
+    </svg>
+  </div>
+  <div class="sm-val"><span id="ramVal">0.0</span><span class="sm-unit">GB</span></div>
+  <div class="sm-trend" id="ramTrend">/ 16 GB TOTAL</div>
+</div>
+
+<!-- GPU RAM -->
+<div class="sys-m sm-gpuram">
+  <div class="sm-ico">🎮</div>
+  <div class="sm-lbl" data-en="GPU RAM" data-fr="GPU RAM">GPU RAM</div>
+  <div class="sm-ring-wrap">
+    <svg width="60" height="60" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+      <circle id="gpuramRing" cx="30" cy="30" r="22" fill="none" stroke="#00E5FF" stroke-width="4" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="138" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s ease"/>
+      <text x="30" y="35" text-anchor="middle" font-family="Orbitron,monospace" font-size="8" fill="#00E5FF" id="gpuramRingTxt">0GB</text>
+    </svg>
+  </div>
+  <div class="sm-val"><span id="gpuRamVal">0.0</span><span class="sm-unit">GB</span></div>
+  <div class="sm-trend" id="gpuRamTrend">/ 12 GB VRAM</div>
+</div>
+
+<!-- GPU RENDERING -->
+<div class="sys-m sm-gpurender">
+  <div class="sm-ico">⚡</div>
+  <div class="sm-lbl" data-en="GPU RENDERING" data-fr="RENDU GPU">GPU RENDERING</div>
+  <div class="sm-ring-wrap">
+    <svg width="60" height="60" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+      <circle id="gpurenderRing" cx="30" cy="30" r="22" fill="none" stroke="#00E676" stroke-width="4" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="138" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s ease"/>
+      <text x="30" y="35" text-anchor="middle" font-family="Orbitron,monospace" font-size="9" fill="#00E676" id="gpurenderRingTxt">0</text>
+    </svg>
+  </div>
+  <div class="sm-val"><span id="gpuRenderVal">0</span><span class="sm-unit">FPS</span></div>
+  <div class="sm-trend" id="gpuRenderTrend">TARGET 144 FPS</div>
+</div>
+
+<!-- GPU RESOLUTION AMELIORATED -->
+<div class="sys-m sm-gpures">
+  <div class="sm-ico">🔭</div>
+  <div class="sm-lbl" data-en="GPU RESOLUTION+" data-fr="RÉSOLUTION GPU+">GPU RESOLUTION+</div>
+  <div class="sm-ring-wrap">
+    <svg width="60" height="60" viewBox="0 0 60 60">
+      <circle cx="30" cy="30" r="22" fill="none" stroke="rgba(255,255,255,.06)" stroke-width="4"/>
+      <circle id="gpuresRing" cx="30" cy="30" r="22" fill="none" stroke="#ffffff" stroke-width="4" stroke-linecap="round" stroke-dasharray="138" stroke-dashoffset="138" transform="rotate(-90 30 30)" style="transition:stroke-dashoffset .5s ease"/>
+      <text x="30" y="35" text-anchor="middle" font-family="Orbitron,monospace" font-size="8" fill="#fff" id="gpuresRingTxt">0%</text>
+    </svg>
+  </div>
+  <div class="sm-val"><span id="gpuResVal">0</span><span class="sm-unit">%</span></div>
+  <div class="sm-trend" id="gpuResTrend">UPSCALE BOOST</div>
+</div>
+```
+
+  </div><!-- /sys-metrics -->
+
+  <!-- TEST ZONE -->
+
+  <div class="test-zone">
+    <div class="tz-title" data-en="⚡ POWER CONTROL ZONE — REAL-TIME ENGINE MONITOR" data-fr="⚡ ZONE DE CONTRÔLE PUISSANCE — MONITEUR MOTEUR TEMPS RÉEL">⚡ POWER CONTROL ZONE — REAL-TIME ENGINE MONITOR</div>
+
+```
+<div class="power-grid">
+  <div class="power-meter">
+    <div class="m-label" data-en="Engine Power Output" data-fr="Puissance Moteur">Engine Power Output</div>
+    <div class="m-value"><span id="boostVal">0.00</span><span class="m-unit"> GO/s</span></div>
+    <div class="m-sub" data-en="BERG Ratio · 1% → 99% Reinject · Infinite Loop" data-fr="Ratio BERG · 1% → 99% Réinjecté · Boucle Infinie">BERG Ratio · 1% → 99% Reinject · Infinite Loop</div>
+    <div class="prog-bar"><div class="prog-fill" id="boostBar" style="width:0%"></div></div>
+    <canvas class="chart-c" id="boostChart" height="70"></canvas>
+  </div>
+  <div class="power-meter">
+    <div class="m-label" style="color:var(--green)" data-en="Energy Battery Reserve" data-fr="Réserve Batterie Énergie">Energy Battery Reserve</div>
+    <div class="m-value" style="color:var(--green)"><span id="battVal">100</span><span class="m-unit" style="color:rgba(0,230,118,.6)"> %</span></div>
+    <div class="m-sub" data-en="Economy Mode · Active Savings · PAWA Reserve" data-fr="Mode Économie · Économies Actives · Réserve PAWA">Economy Mode · Active Savings · PAWA Reserve</div>
+    <div class="prog-bar"><div class="prog-fill prog-battery" id="battBar" style="width:100%"></div></div>
+    <canvas class="chart-c" id="battChart" height="70"></canvas>
+  </div>
+</div>
+
+<div class="pow-btns">
+  <button class="pow-btn btn-boost" id="boostBtn" onclick="toggleBoost()">
+    ⚡ <span id="boostTxt" data-en="BOOSTER POWER ENGINE" data-fr="BOOSTER MOTEUR PUISSANCE">BOOSTER POWER ENGINE</span>
+  </button>
+  <button class="pow-btn btn-eco" id="ecoBtn" onclick="toggleEco()">
+    🔋 <span id="ecoTxt" data-en="ECONOMY ENERGY BATTERY" data-fr="ÉCONOMIE BATTERIE ÉNERGIE">ECONOMY ENERGY BATTERY</span>
+  </button>
+</div>
+```
+
+  </div>
+
+  <!-- 25 MOTORS -->
+
+  <div style="text-align:center;margin-bottom:1.5rem">
+    <span style="font-family:'Orbitron',monospace;font-size:.8rem;letter-spacing:.4em;color:rgba(255,255,255,.35)" data-en="THE 25 ENGINES — SUPERSAM SYSTEM" data-fr="LES 25 MOTEURS — SYSTÈME SUPERSAM">THE 25 ENGINES — SUPERSAM SYSTEM</span>
+  </div>
+  <div class="motors-grid" id="motorsGrid"></div>
+</div>
+</section>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg3" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="25%" stop-color="rgba(255,215,0,0.4)"/><stop offset="60%" stop-color="rgba(255,255,255,0.7)"/><stop offset="85%" stop-color="rgba(255,215,0,0.4)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,60 C120,20 240,80 360,60 C480,40 600,80 720,55 C840,30 960,70 1080,55 C1200,40 1320,65 1440,55" fill="none" stroke="url(#wg3)" stroke-width="1.5"/><path d="M0,65 C120,25 240,85 360,65 C480,45 600,85 720,60 C840,35 960,75 1080,60 C1200,45 1320,70 1440,60" fill="none" stroke="rgba(255,215,0,0.07)" stroke-width="1"/></svg></div>
+
+<div class="article-sep">
+  <p data-en="The <span class='kw'>BERG-ratio</span> is absolute law: <span class='kw-c'>1% fuels the energy balance. 99% reinjects</span> into the infinite loop. The 25 engines run together to maximize this ratio. The <span class='kw'>Recyclating Core</span> and <span class='kw'>@Omega Accumulator</span> are the culminating engines — available on superior tiers. The loop never stops. <span class='kw-w'>9 bridges × DECUPLE = @Omega.</span>"
+       data-fr="Le <span class='kw'>BERG-ratio</span> est loi absolue : <span class='kw-c'>1% alimente le bilan. 99% se réinjectent</span> dans la boucle infinie. Les 25 moteurs tournent ensemble pour maximiser ce ratio. Le <span class='kw'>Recyclating Core</span> et l'<span class='kw'>@Omega Accumulateur</span> sont les moteurs culminants — disponibles dans les tiers supérieurs. La boucle ne s'arrête jamais. <span class='kw-w'>9 ponts × DECUPLE = @Omega.</span>">
+    The <span class="kw">BERG-ratio</span> is absolute law: <span class="kw-c">1% fuels the energy balance. 99% reinjects</span> into the infinite loop. The 25 engines run together to maximize this ratio. The <span class="kw">Recyclating Core</span> and <span class="kw">@Omega Accumulator</span> are the culminating engines — available on superior tiers. The loop never stops. <span class="kw-w">9 bridges × DECUPLE = @Omega.</span>
+  </p>
+</div>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg4" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="30%" stop-color="rgba(0,230,118,0.3)"/><stop offset="50%" stop-color="rgba(0,229,255,0.5)"/><stop offset="70%" stop-color="rgba(0,230,118,0.3)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,40 C180,70 360,10 540,40 C720,70 900,10 1080,40 C1260,70 1380,30 1440,40" fill="none" stroke="url(#wg4)" stroke-width="1.5"/></svg></div>
+
+<!-- ═══ ALISCIA ═══ -->
+
+<section id="aliscia" class="sec-cage">
+  <div class="cage-tr"></div><div class="cage-bl"></div>
+<div class="aliscia-wrap">
+  <div class="al-glow"></div>
+  <span class="robot-ico">🤖</span>
+  <div class="cs-tag" data-en="COMING SOON · IN DEVELOPMENT · FUTURE AI" data-fr="BIENTÔT · EN DÉVELOPPEMENT · IA FUTURE">COMING SOON · IN DEVELOPMENT · FUTURE AI</div>
+  <p class="sec-label" data-en="Future Generative AI · Just Keff Tech Labs" data-fr="IA Générative Future · Just Keff Tech Labs">Future Generative AI · Just Keff Tech Labs</p>
+  <h2 class="al-name"><span class="gold-gradient">A.L.i.S.C.i.A</span></h2>
+  <p class="al-acro" data-en="<span>A</span>lgorythmiques · <span>L</span>iberated · <span>i</span>déologic · <span>S</span>equential · <span>C</span>onscience · <span>i</span>ntelligence · <span>A</span>rtificial" data-fr="<span>A</span>lgorithmique · <span>L</span>ibérée · <span>i</span>déologique · <span>S</span>équentielle · <span>C</span>onscience · <span>i</span>ntelligence · <span>A</span>rtificielle">
+    <span>A</span>lgorythmiques · <span>L</span>iberated · <span>i</span>déologic · <span>S</span>equential · <span>C</span>onscience · <span>i</span>ntelligence · <span>A</span>rtificial
+  </p>
+  <p class="art-body" style="font-family:'Rajdhani',sans-serif;font-size:1.05rem;line-height:1.85;color:rgba(255,255,255,.75);max-width:700px;margin:0 auto 2.5rem"
+     data-en="The future of <span class='kw'>GoleMotor</span> breathes. <span class='kw-c'>A.L.i.S.C.i.A</span> will be the generative AI engine fully assimilated into the <span class='kw'>SuperS.A.M</span> system — a universal creative generator, coach, partner, and professor. Powered by all <span class='kw'>25 motors</span> running simultaneously at <span class='kw-w'>@Omega level.</span>"
+     data-fr="L'avenir de <span class='kw'>GoleMotor</span> respire. <span class='kw-c'>A.L.i.S.C.i.A</span> sera le moteur IA génératif pleinement assimilé au système <span class='kw'>SuperS.A.M</span> — un générateur créatif universel, coach, partenaire et professeur. Alimenté par les <span class='kw'>25 moteurs</span> tournant simultanément au niveau <span class='kw-w'>@Omega.</span>">
+    The future of <span class="kw">GoleMotor</span> breathes. <span class="kw-c">A.L.i.S.C.i.A</span> will be the generative AI engine fully assimilated into the <span class="kw">SuperS.A.M</span> system — a universal creative generator, coach, partner, and professor. Powered by all <span class="kw">25 motors</span> running simultaneously at <span class="kw-w">@Omega level.</span>
+  </p>
+  <div class="al-features">
+    <div class="al-feat"><div class="feat-ico">🎨</div><div class="feat-ttl" data-en="Content Generation" data-fr="Génération Contenu">Content Generation</div><div class="feat-desc" data-en="Images · Audio · Voices · Videos — full multi-modal creative generation" data-fr="Images · Audio · Voix · Vidéos — génération créative multi-modale complète">Images · Audio · Voices · Videos — full multi-modal creative generation</div></div>
+    <div class="al-feat"><div class="feat-ico">🎬</div><div class="feat-ttl" data-en="Media Editing" data-fr="Édition Média">Media Editing</div><div class="feat-desc" data-en="Modify videos, images, audio with AI precision and intelligence" data-fr="Modifier vidéos, images, audio avec précision et intelligence IA">Modify videos, images, audio with AI precision and intelligence</div></div>
+    <div class="al-feat"><div class="feat-ico">💾</div><div class="feat-ttl" data-en="Auto History" data-fr="Historique Auto">Auto History</div><div class="feat-desc" data-en="Auto-active personal history saving — your sessions always preserved per user" data-fr="Sauvegarde automatique de l'historique personnel — vos sessions toujours préservées">Auto-active personal history saving — your sessions always preserved per user</div></div>
+    <div class="al-feat"><div class="feat-ico">🤝</div><div class="feat-ttl" data-en="Business Partner" data-fr="Partenaire Affaires">Business Partner</div><div class="feat-desc" data-en="Strategic co-creator and active business development partner" data-fr="Co-créateur stratégique et partenaire actif de développement d'affaires">Strategic co-creator and active business development partner</div></div>
+    <div class="al-feat"><div class="feat-ico">📚</div><div class="feat-ttl" data-en="Super Tutor" data-fr="Super Tuteur">Super Tutor</div><div class="feat-desc" data-en="Expert professor and step-by-step tutor on absolutely anything you ask" data-fr="Professeur expert et tuteur étape par étape sur absolument tout ce que vous demandez">Expert professor and step-by-step tutor on absolutely anything you ask</div></div>
+    <div class="al-feat"><div class="feat-ico">🏢</div><div class="feat-ttl" data-en="Business Coach" data-fr="Coach Entreprise">Business Coach</div><div class="feat-desc" data-en="Enterprise strategy, growth, execution, and entrepreneurial coaching" data-fr="Stratégie, croissance, exécution et coaching entrepreneurial">Enterprise strategy, growth, execution, and entrepreneurial coaching</div></div>
+    <div class="al-feat"><div class="feat-ico">🌱</div><div class="feat-ttl" data-en="Life Coach" data-fr="Coach de Vie">Life Coach</div><div class="feat-desc" data-en="Personal development, goals, habits, and life transformation" data-fr="Développement personnel, objectifs, habitudes et transformation de vie">Personal development, goals, habits, and life transformation</div></div>
+    <div class="al-feat"><div class="feat-ico">✨</div><div class="feat-ttl" data-en="Spiritual Coach" data-fr="Coach Spirituel">Spiritual Coach</div><div class="feat-desc" data-en="Spiritual, emotional, and sentimental guidance and elevation" data-fr="Guidance et élévation spirituelle, émotionnelle et sentimentale">Spiritual, emotional, and sentimental guidance and elevation</div></div>
+    <div class="al-feat"><div class="feat-ico">💪</div><div class="feat-ttl" data-en="Sports Coach" data-fr="Coach Sportif">Sports Coach</div><div class="feat-desc" data-en="Athletic performance, training programs, and full physical optimization" data-fr="Performance athlétique, programmes d'entraînement et optimisation physique complète">Athletic performance, training programs, and full physical optimization</div></div>
+  </div>
+  <p class="al-quote" data-en="&ldquo;A.L.i.S.C.i.A will be assimilated to GoleMotor. One system. One soul. One infinite engine.&rdquo;" data-fr="&ldquo;A.L.i.S.C.i.A sera assimilée à GoleMotor. Un système. Une âme. Un moteur infini.&rdquo;">
+    &ldquo;A.L.i.S.C.i.A will be assimilated to GoleMotor. One system. One soul. One infinite engine.&rdquo;
+  </p>
+</div>
+</section>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg5" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="20%" stop-color="rgba(255,215,0,0.6)"/><stop offset="50%" stop-color="rgba(255,255,255,0.9)"/><stop offset="80%" stop-color="rgba(255,215,0,0.6)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,30 C90,60 180,10 270,40 C360,70 450,20 540,50 C630,80 720,30 810,55 C900,80 990,25 1080,50 C1170,75 1260,30 1350,55 C1400,65 1430,50 1440,45" fill="none" stroke="url(#wg5)" stroke-width="1.5"/><path d="M0,35 C90,65 180,15 270,45 C360,75 450,25 540,55 C630,85 720,35 810,60 C900,85 990,30 1080,55 C1170,80 1260,35 1350,60 C1400,70 1430,55 1440,50" fill="none" stroke="rgba(255,215,0,0.08)" stroke-width="1"/></svg></div>
+
+<div class="article-sep">
+  <p data-en="<span class='kw'>A.L.i.S.C.i.A</span> is not just an AI. She is the <span class='kw-c'>breath of the system</span>. If <span class='kw-w'>SUPERSAM</span> is the bone, <span class='kw'>ALISCIA is the blood.</span> She gives direction. Without her the engine spins in place. With her <span class='kw'>every cycle strikes true.</span> The future is being built. <span class='kw-w'>Now.</span>"
+       data-fr="<span class='kw'>A.L.i.S.C.i.A</span> n'est pas juste une IA. Elle est le <span class='kw-c'>souffle du système</span>. Si <span class='kw-w'>SUPERSAM</span> est l'os, <span class='kw'>ALISCIA est le sang.</span> Elle donne la direction. Sans elle le moteur tourne en rond. Avec elle <span class='kw'>chaque cycle frappe juste.</span> L'avenir se construit. <span class='kw-w'>Maintenant.</span>">
+    <span class="kw">A.L.i.S.C.i.A</span> is not just an AI. She is the <span class="kw-c">breath of the system</span>. If <span class="kw-w">SUPERSAM</span> is the bone, <span class="kw">ALISCIA is the blood.</span> She gives direction. Without her the engine spins in place. With her <span class="kw">every cycle strikes true.</span> The future is being built. <span class="kw-w">Now.</span>
+  </p>
+</div>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg6" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="35%" stop-color="rgba(0,229,255,0.4)"/><stop offset="50%" stop-color="rgba(255,255,255,0.6)"/><stop offset="65%" stop-color="rgba(0,229,255,0.4)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,50 C360,20 720,80 1080,50 C1260,35 1380,55 1440,50" fill="none" stroke="url(#wg6)" stroke-width="1.5"/><path d="M0,45 C360,75 720,15 1080,45 C1260,60 1380,40 1440,45" fill="none" stroke="rgba(0,229,255,0.05)" stroke-width="1"/></svg></div>
+
+<!-- ═══ PRICING ═══ -->
+
+<section id="pricing" class="sec-cage">
+  <div class="cage-tr"></div><div class="cage-bl"></div>
+<div class="sec-inner">
+  <div class="sec-header">
+    <p class="sec-label" data-en="Plans · Access · Power Tiers · Choose Your Level" data-fr="Plans · Accès · Niveaux de Puissance · Choisissez Votre Niveau">Plans · Access · Power Tiers · Choose Your Level</p>
+    <h2 class="sec-title"><span class="gold-gradient" data-en="Unlock Your Power" data-fr="Débloquez Votre Puissance">Unlock Your Power</span></h2>
+    <p class="sec-sub" data-en="From free entry to full @Omega — every level unlocks more computational power" data-fr="De l'accès gratuit à @Omega complet — chaque niveau débloque plus de puissance computationnelle">From free entry to full @Omega — every level unlocks more computational power</p>
+  </div>
+  <div class="pricing-grid">
+    <div class="p-card">
+      <div class="plan-tag" data-en="FREEMIUM · ENTRY LEVEL · FOREVER" data-fr="FREEMIUM · NIVEAU ENTRÉE · POUR TOUJOURS">FREEMIUM · ENTRY LEVEL · FOREVER</div>
+      <div class="plan-name" data-en="FREE RIDER" data-fr="FREE RIDER">FREE RIDER</div>
+      <div class="plan-price" style="color:#fff">$0</div>
+      <div class="plan-period" data-en="Forever Free — Always" data-fr="Gratuit Pour Toujours — Toujours">Forever Free — Always</div>
+      <ul class="plan-feats">
+        <li class="hi" data-en="10 FREE Engines Unlocked" data-fr="10 Moteurs GRATUITS Débloqués">10 FREE Engines Unlocked</li>
+        <li data-en="BERG Engine · SUPERSAM · ALISCIA" data-fr="Moteur BERG · SUPERSAM · ALISCIA">BERG Engine · SUPERSAM · ALISCIA</li>
+        <li data-en="PAWA · Metadata Motor · CRON System" data-fr="PAWA · Métadonnées · Système CRON">PAWA · Metadata Motor · CRON System</li>
+        <li data-en="Entropy Harvester · RAF Sampler" data-fr="Collecteur Entropie · Échantillonneur RAF">Entropy Harvester · RAF Sampler</li>
+        <li data-en="Dormant Waker · Frequency Restorer · Fractal Scaler" data-fr="Réveilleur Dormants · Restaurateur Fréquence · Scaleur Fractal">Dormant Waker · Frequency Restorer · Fractal Scaler</li>
+        <li style="color:rgba(255,255,255,.4);font-size:.75rem" data-en="📱 Share button → Add to Home Screen" data-fr="📱 Bouton Partager → Ajouter à l'écran d'accueil">📱 Share button → Add to Home Screen</li>
+      </ul>
+      <button class="plan-cta cta-free" data-en="START FREE" data-fr="COMMENCER GRATUIT">START FREE</button>
+    </div>
+    <div class="p-card">
+      <div class="plan-tag" data-en="WEEKLY · STARTER POWER" data-fr="HEBDOMADAIRE · PUISSANCE DÉBUTANT">WEEKLY · STARTER POWER</div>
+      <div class="plan-name" data-en="FULL ENGINE" data-fr="MOTEUR COMPLET">FULL ENGINE</div>
+      <div class="plan-price gold-gradient">$5</div>
+      <div class="plan-period" data-en="per week" data-fr="par semaine">per week</div>
+      <ul class="plan-feats">
+        <li class="hi" data-en="All 25 Engines Unlocked" data-fr="Les 25 Moteurs Débloqués">All 25 Engines Unlocked</li>
+        <li class="hi2" data-en="+ Recyclor Core Access" data-fr="+ Accès Recycleur Core">+ Recyclor Core Access</li>
+        <li data-en="Economy Battery Mode" data-fr="Mode Batterie Économie">Economy Battery Mode</li>
+        <li data-en="Boost Engine CPU / CPUv" data-fr="Boost Moteur CPU / CPUv">Boost Engine CPU / CPUv</li>
+        <li data-en="@Omega Accumulator (basic)" data-fr="@Omega Accumulateur (basique)">@Omega Accumulator (basic)</li>
+      </ul>
+      <button class="plan-cta cta-paid" data-en="GET WEEKLY ACCESS" data-fr="ACCÈS HEBDOMADAIRE">GET WEEKLY ACCESS</button>
+    </div>
+    <div class="p-card p-featured">
+      <div class="pop-badge" data-en="POPULAR" data-fr="POPULAIRE">POPULAR</div>
+      <div class="plan-tag" data-en="MONTHLY · POWER USER" data-fr="MENSUEL · POWER USER">MONTHLY · POWER USER</div>
+      <div class="plan-name" data-en="SUPER ENGINE" data-fr="SUPER MOTEUR">SUPER ENGINE</div>
+      <div class="plan-price gold-gradient">$25</div>
+      <div class="plan-period" data-en="per month" data-fr="par mois">per month</div>
+      <ul class="plan-feats">
+        <li class="hi" data-en="All 25 Engines + Recyclor Core" data-fr="25 Moteurs + Recycleur Core">All 25 Engines + Recyclor Core</li>
+        <li class="hi" data-en="Computative AI Boost" data-fr="Boost IA Computatif">Computative AI Boost</li>
+        <li data-en="Economy Battery Mode" data-fr="Mode Batterie Économie">Economy Battery Mode</li>
+        <li data-en="Extended Storage + RAM Boost" data-fr="Stockage Étendu + Boost RAM">Extended Storage + RAM Boost</li>
+        <li data-en="GPU &amp; GPUv Resolution Boost" data-fr="Boost Résolution GPU &amp; GPUv">GPU &amp; GPUv Resolution Boost</li>
+        <li class="hi2" data-en="@Omega Accumulator — Full Access" data-fr="@Omega Accumulateur — Accès Complet">@Omega Accumulator — Full Access</li>
+      </ul>
+      <button class="plan-cta cta-feat" data-en="GET MONTHLY ACCESS" data-fr="ACCÈS MENSUEL">GET MONTHLY ACCESS</button>
+    </div>
+    <div class="p-card">
+      <div class="plan-tag" data-en="ANNUAL · FULL YEAR ACCESS" data-fr="ANNUEL · ACCÈS ANNÉE COMPLÈTE">ANNUAL · FULL YEAR ACCESS</div>
+      <div class="plan-name" data-en="YEAR @OMEGA" data-fr="ANNÉE @OMEGA">YEAR @OMEGA</div>
+      <div class="plan-price gold-gradient">$150</div>
+      <div class="plan-period" data-en="per year — save $150 vs monthly" data-fr="par an — économisez 150$ vs mensuel">per year — save $150 vs monthly</div>
+      <ul class="plan-feats">
+        <li class="hi" data-en="ALL ACCESS for a Full Year" data-fr="ACCÈS TOTAL pour une Année Complète">ALL ACCESS for a Full Year</li>
+        <li data-en="Every engine, every feature included" data-fr="Chaque moteur, chaque fonctionnalité incluse">Every engine, every feature included</li>
+        <li data-en="Priority support and updates" data-fr="Support prioritaire et mises à jour">Priority support and updates</li>
+        <li class="hi2" data-en="Early A.L.i.S.C.i.A beta access" data-fr="Accès bêta anticipé A.L.i.S.C.i.A">Early A.L.i.S.C.i.A beta access</li>
+        <li data-en="@Omega Accumulator — Maximal Level" data-fr="@Omega Accumulateur — Niveau Maximal">@Omega Accumulator — Maximal Level</li>
+      </ul>
+      <button class="plan-cta cta-paid" data-en="GET YEARLY ACCESS" data-fr="ACCÈS ANNUEL">GET YEARLY ACCESS</button>
+    </div>
+    <div class="p-card p-lifetime">
+      <div class="plan-tag" data-en="LIFETIME · DEFINITIVE ACQUISITION · SEALED" data-fr="À VIE · ACQUISITION DÉFINITIVE · SCELLÉE">LIFETIME · DEFINITIVE ACQUISITION · SEALED</div>
+      <div class="plan-name" style="font-size:1.35rem" data-en="@OMEGA FOREVER + A.L.i.S.C.i.A PRIVATE ACCESS" data-fr="@OMEGA POUR TOUJOURS + ACCÈS PRIVÉ A.L.i.S.C.i.A">@OMEGA FOREVER + A.L.i.S.C.i.A PRIVATE ACCESS</div>
+      <div class="plan-price gold-gradient" style="font-size:3.2rem">$599</div>
+      <div class="plan-period" data-en="once · forever · yours · sealed" data-fr="une fois · pour toujours · à vous · scellé">once · forever · yours · sealed</div>
+      <ul class="plan-feats" style="columns:2;gap:1.5rem">
+        <li class="hi" data-en="Full Definitive Access — Forever" data-fr="Accès Définitif Complet — Pour Toujours">Full Definitive Access — Forever</li>
+        <li class="hi" data-en="Private A.L.i.S.C.i.A Access on launch" data-fr="Accès Privé A.L.i.S.C.i.A au lancement">Private A.L.i.S.C.i.A Access on launch</li>
+        <li data-en="Sealed unique personalized build" data-fr="Build personnalisé unique scellé">Sealed unique personalized build</li>
+        <li data-en="All 25 engines + future engines" data-fr="25 moteurs + moteurs futurs">All 25 engines + future engines</li>
+        <li class="hi2" data-en="@Omega at maximum — always" data-fr="@Omega au maximum — toujours">@Omega at maximum — always</li>
+        <li data-en="Founding member status" data-fr="Statut membre fondateur">Founding member status</li>
+      </ul>
+      <button class="plan-cta cta-life" style="margin-top:1.5rem" data-en="⚡ ACQUIRE FOREVER — $599" data-fr="⚡ ACQUÉRIR POUR TOUJOURS — 599$">⚡ ACQUIRE FOREVER — $599</button>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg7" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="20%" stop-color="rgba(255,215,0,0.5)"/><stop offset="50%" stop-color="rgba(255,255,255,0.8)"/><stop offset="80%" stop-color="rgba(255,215,0,0.5)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,40 C160,10 320,70 480,40 C640,10 800,70 960,40 C1120,10 1280,70 1440,40" fill="none" stroke="url(#wg7)" stroke-width="1.5"/></svg></div>
+
+<div class="article-sep">
+  <p data-en="<span class='kw'>Just Keff Tech Labs</span> — we love tech. <span class='kw-c'>Tech loves life.</span> Built with <span class='kw-w'>passion</span>, powered by <span class='kw'>vision</span>, fueled by the conviction that <span class='kw'>nothing is wasted</span> — only waiting to be transformed. <span class='kw-w'>GoleMotor is the proof.</span>"
+       data-fr="<span class='kw'>Just Keff Tech Labs</span> — on kiffe la tech. <span class='kw-c'>La tech kiffe la vie.</span> Construit avec <span class='kw-w'>passion</span>, propulsé par la <span class='kw'>vision</span>, alimenté par la conviction que <span class='kw'>rien ne se perd</span> — seulement en attente d'être transformé. <span class='kw-w'>GoleMotor en est la preuve.</span>">
+    <span class="kw">Just Keff Tech Labs</span> — we love tech. <span class="kw-c">Tech loves life.</span> Built with <span class="kw-w">passion</span>, powered by <span class="kw">vision</span>, fueled by the conviction that <span class="kw">nothing is wasted</span> — only waiting to be transformed. <span class="kw-w">GoleMotor is the proof.</span>
+  </p>
+</div>
+
+<!-- ═══ WAVE SEPARATOR ═══ -->
+
+<div class="wave-sep"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 80" preserveAspectRatio="none"><defs><linearGradient id="wg8" x1="0%" x2="100%"><stop offset="0%" stop-color="transparent"/><stop offset="40%" stop-color="rgba(255,215,0,0.3)"/><stop offset="50%" stop-color="rgba(255,255,255,0.5)"/><stop offset="60%" stop-color="rgba(255,215,0,0.3)"/><stop offset="100%" stop-color="transparent"/></linearGradient></defs><path d="M0,50 C360,80 720,20 1080,50 C1260,65 1380,40 1440,50" fill="none" stroke="url(#wg8)" stroke-width="1.5"/></svg></div>
+
+<!-- ═══ ABOUT / LOCATION ═══ -->
+
+<section id="about" style="padding:4rem 2rem">
+<div style="max-width:900px;margin:0 auto;text-align:center">
+  <p class="sec-label" data-en="Just Keff Tech Labs · Location · Find Us" data-fr="Just Keff Tech Labs · Localisation · Nous Trouver">Just Keff Tech Labs · Location · Find Us</p>
+  <h3 style="font-family:'Orbitron',monospace;font-size:clamp(1.2rem,3vw,2.2rem);font-weight:700;margin-bottom:1rem" data-en="Find Us" data-fr="Nous Trouver">Find Us</h3>
+  <a href="YOUR_MAP_LINK_HERE" target="_blank" rel="noopener" style="text-decoration:none">
+    <div class="loc-ph" data-en="📍 Click to open — INSERT YOUR LOCATION MAP LINK IN THE HTML (href attribute above)" data-fr="📍 Cliquer pour ouvrir — INSÉREZ VOTRE LIEN DE LOCALISATION DANS LE HTML (attribut href ci-dessus)">
+      📍 Click to open — INSERT YOUR LOCATION MAP LINK IN THE HTML (href attribute above)
+    </div>
+  </a>
+</div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+
+<footer>
+<div class="foot-in">
+  <div class="foot-logo"><span class="gold-gradient">GOLE</span>MOTOR</div>
+  <p class="foot-tag">"On kiffe la tech. La tech kiffe la vie."</p>
+  <div class="foot-links">
+    <a href="#dashboard" data-en="Dashboard" data-fr="Tableau de Bord">Dashboard</a>
+    <a href="#aliscia" data-en="A.L.i.S.C.i.A" data-fr="A.L.i.S.C.i.A">A.L.i.S.C.i.A</a>
+    <a href="#pricing" data-en="Plans" data-fr="Abonnements">Plans</a>
+    <a href="#about" data-en="Location" data-fr="Localisation">Location</a>
+  </div>
+  <p class="foot-copy">© 2026 Just Keff Tech Labs · GoleMotor · SuperS.A.M System · All Rights Reserved · Confidential</p>
+</div>
+</footer>
+
+<script>
+// ── LANG SYSTEM ──────────────────────────────────────────
+let lang = 'en';
+function setLang(l){
+  lang = l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  document.querySelector(`.lang-btn[onclick="setLang('${l}')"]`).classList.add('active');
+  document.querySelectorAll('[data-en]').forEach(el=>{
+    const t = el.getAttribute('data-'+l);
+    if(t) el.innerHTML = t;
+  });
+}
+
+// ── WAVE CANVAS ──────────────────────────────────────────
+const wc = document.getElementById('waveCanvas');
+const wctx = wc.getContext('2d');
+function resizeWave(){wc.width=window.innerWidth;wc.height=window.innerHeight}
+resizeWave();
+window.addEventListener('resize',resizeWave);
+let wt=0;
+function drawWaves(){
+  wctx.clearRect(0,0,wc.width,wc.height);
+  const waves=[
+    {a:.018,col:'255,215,0',speed:.018,amp:60,freq:.006,phase:0},
+    {a:.012,col:'255,255,255',speed:.012,amp:90,freq:.004,phase:1.2},
+    {a:.014,col:'255,215,0',speed:.022,amp:40,freq:.009,phase:2.5},
+    {a:.008,col:'255,255,255',speed:.008,amp:120,freq:.003,phase:.7},
+    {a:.01,col:'255,215,0',speed:.016,amp:30,freq:.012,phase:3.1},
+  ];
+  waves.forEach(w=>{
+    wctx.beginPath();
+    wctx.strokeStyle=`rgba(${w.col},${w.a})`;
+    wctx.lineWidth=1;
+    for(let x=0;x<=wc.width;x+=4){
+      const y=wc.height*.5+Math.sin(x*w.freq+wt*w.speed+w.phase)*w.amp+Math.sin(x*.002+wt*.005)*50;
+      x===0?wctx.moveTo(x,y):wctx.lineTo(x,y);
+    }
+    wctx.stroke();
+  });
+  wt+=1;
+  requestAnimationFrame(drawWaves);
+}
+drawWaves();
+
+// ── MOTORS DATA ───────────────────────────────────────────
+const MOTORS=[
+  {n:'01',name:'BERG ENGINE',desc:'Base Engine — Energy Balance Ratio Gain',tier:'FREE',s:'ACTIF'},
+  {n:'02',name:'SUPERSAM — ENGINE A',desc:'Physical Engine — The Bone of the System',tier:'FREE',s:'ACTIF'},
+  {n:'03',name:'ALISCIA — ENGINE B',desc:'Emotional Engine — The Breath of the System',tier:'FREE',s:'ACTIF'},
+  {n:'04',name:'ALISCIA INFINITY SAM — C',desc:'Fusion Engine — The Emergent State',tier:'PAID',s:'DORMANT'},
+  {n:'05',name:'PAWA ENGINE',desc:'Power Augmented Watt Augmented',tier:'FREE',s:'ACTIF'},
+  {n:'06',name:'SLC SYNC',desc:'Sequential Libre Conscience Sync',tier:'PAID',s:'DORMANT'},
+  {n:'07',name:'METADATA MOTOR',desc:'Metadata Engine — The Carburetor',tier:'FREE',s:'PASSIF'},
+  {n:'08',name:'CRON SYSTEM',desc:'Cellular System — @CRON to @Omega',tier:'FREE',s:'ACTIF'},
+  {n:'09',name:'CPUv LOOP',desc:'Virtual CPU Loop — Infinite Loop Backbone',tier:'PAID',s:'DORMANT'},
+  {n:'10',name:'ENTROPY HARVESTER',desc:'Entropy Collector — Raw System Fuel',tier:'FREE',s:'ACTIF'},
+  {n:'11',name:'RAF SAMPLER',desc:'RequestAnimationFrame — BERG Precision Clock',tier:'FREE',s:'PASSIF'},
+  {n:'12',name:'BRIDGE MULTIPLIER',desc:'Bridge Multiplier — ×DECUPLE per Bridge',tier:'PAID',s:'DORMANT'},
+  {n:'13',name:'DORMANT WAKER',desc:'Dormant Waker — Energy Exciter',tier:'FREE',s:'PASSIF'},
+  {n:'14',name:'FREQUENCY RESTORER',desc:'Frequency Restorer — Recalibration to Origin',tier:'FREE',s:'ACTIF'},
+  {n:'15',name:'RECYCLATING CORE',desc:'THE RECYCLATOR — BERG Transmutation Core',tier:'RECYCLEUR',s:'DORMANT'},
+  {n:'16',name:'SEFIROT RESONATOR',desc:'Sefirot Resonator — 10 Computational Freqs',tier:'PAID',s:'DORMANT'},
+  {n:'17',name:'TSIMTSOUM COMPRESSOR',desc:'Tsimtsoum Compressor — 4 Lossless Contractions',tier:'FREE',s:'PASSIF'},
+  {n:'18',name:'GUEMATRIE MAPPER',desc:'Gematric Mapper — Numerical Frequency Calculator',tier:'PAID',s:'DORMANT'},
+  {n:'19',name:'QUANTUM BRIDGE',desc:'Quantum Bridge — Inter-level Amplifier nA→(n+1)A',tier:'PAID',s:'DORMANT'},
+  {n:'20',name:'CPUv AMPLIFIER',desc:'Virtual CPU Amplifier — Intelligence Between Layers',tier:'PAID',s:'DORMANT'},
+  {n:'21',name:'GPUv RENDERER',desc:'Virtual GPU Renderer — Massive Parallel Compute',tier:'PAID',s:'DORMANT'},
+  {n:'22',name:'FRACTAL SCALER',desc:'Fractal Scaler — Same Engine at All Scales',tier:'FREE',s:'PASSIF'},
+  {n:'23',name:'PHONETIC ENCODER',desc:'Phonetic Encoder — HA AH HOH as BERG Operators',tier:'FREE',s:'ACTIF'},
+  {n:'24',name:'ANTIFRAGILE SHIELD',desc:'Antifragile Shield — Strengthening Under Stress',tier:'FREE',s:'ACTIF'},
+  {n:'25',name:'@OMEGA ACCUMULATOR',desc:'Omega Accumulator — Culminating System Engine',tier:'RECYCLEUR',s:'DORMANT'},
+];
+const MV = MOTORS.map(()=>({gos:(Math.random()*2.5+.3),pct:Math.floor(Math.random()*85+10)}));
+
+function renderMotors(boost=false,eco=false){
+  document.getElementById('motorsGrid').innerHTML=MOTORS.map((m,i)=>{
+    const locked=(m.tier!=='FREE')&&!boost;
+    const cc=m.tier==='RECYCLEUR'?'mc-rec':m.tier==='FREE'?'mc-free':'mc-paid';
+    const bc=m.tier==='RECYCLEUR'?'mb-rec':m.tier==='FREE'?'mb-free':'mb-paid';
+    const pct=eco?Math.min(MV[i].pct+12,100):MV[i].pct;
+    const gos=boost?(MV[i].gos*3.2):eco?(MV[i].gos*.5):MV[i].gos;
+    const st=locked?'LOCKED':m.s;
+    const dc=st==='ACTIF'?'sd-actif':st==='PASSIF'?'sd-passif':st==='LOCKED'?'sd-locked':'sd-dormant';
+    const vc=pct>70?'var(--green)':'var(--gold)';
+    return`<div class="motor-card ${cc} ${locked?'mc-locked':''}">
+      ${locked?'<div class="lock-ico">🔒</div>':''}
+      <div class="m-num">ENGINE #${m.n}</div>
+      <div class="m-name">${m.name}</div>
+      <div class="m-desc">${m.desc}</div>
+      <span class="m-badge ${bc}">${m.tier}</span>
+      <div class="m-stats">
+        <div class="m-stat"><div class="ms-lbl">POWER</div><div class="ms-val">${locked?'—':gos.toFixed(2)}<span style="font-size:.55rem;color:rgba(255,215,0,.45);"> GO/s</span></div></div>
+        <div class="m-stat"><div class="ms-lbl">OUTPUT</div><div class="ms-val" style="color:${locked?'rgba(255,255,255,.2)':vc}">${locked?'—':pct}%</div></div>
+        <div class="m-stat"><div class="ms-lbl">STATUS</div><div class="ms-val" style="font-size:.62rem;color:${st==='ACTIF'?'var(--gold)':st==='PASSIF'?'rgba(255,255,255,.4)':st==='LOCKED'?'rgba(255,255,255,.2)':'#5C9DFF'}"><span class="status-dot ${dc}"></span>${st}</div></div>
+      </div>
+      <div class="m-mini-bar"><div class="m-mini-fill" style="width:${locked?0:pct}%"></div></div>
+    </div>`;
+  }).join('');
+}
+renderMotors();
+
+// ── BOOST / ECO ───────────────────────────────────────────
+let boosting=false,eco=false;
+function toggleBoost(){
+  boosting=!boosting;
+  if(boosting){eco=false;document.getElementById('ecoBtn').classList.remove('eco-on');document.getElementById('ecoTxt').textContent=lang==='fr'?'ÉCONOMIE BATTERIE ÉNERGIE':'ECONOMY ENERGY BATTERY';}
+  document.getElementById('boostBtn').classList.toggle('boosting',boosting);
+  document.getElementById('boostTxt').textContent=boosting?(lang==='fr'?'EN BOOST... ⚡⚡⚡':'BOOSTING... ⚡⚡⚡'):(lang==='fr'?'BOOSTER MOTEUR PUISSANCE':'BOOSTER POWER ENGINE');
+  renderMotors(boosting,eco);
+}
+function toggleEco(){
+  eco=!eco;
+  if(eco){boosting=false;document.getElementById('boostBtn').classList.remove('boosting');document.getElementById('boostTxt').textContent=lang==='fr'?'BOOSTER MOTEUR PUISSANCE':'BOOSTER POWER ENGINE';}
+  document.getElementById('ecoBtn').classList.toggle('eco-on',eco);
+  document.getElementById('ecoTxt').textContent=eco?(lang==='fr'?'MODE ÉCONOMIE ACTIF 🔋':'ECO MODE ACTIVE 🔋'):(lang==='fr'?'ÉCONOMIE BATTERIE ÉNERGIE':'ECONOMY ENERGY BATTERY');
+  renderMotors(boosting,eco);
+}
+
+// ── BERG METERS + CHARTS ───────────────────────────────────────
+let curB=0,curBatt=75,tB=0,tBatt=75;
+const cd={b:Array(60).fill(0),ba:Array(60).fill(75)};
+function updateMeters(){
+  const t=Date.now()*.001;
+  tB=boosting?8+Math.sin(t*2.3)*1.8:eco?.4+Math.sin(t*.8)*.15:2+Math.sin(t*1.5)*.6;
+  tBatt=boosting?Math.max(15,curBatt-.04):eco?Math.min(100,curBatt+.08):70+Math.sin(t*.5)*8;
+  curB+=(tB-curB)*.06;
+  curBatt+=(tBatt-curBatt)*.04;
+  document.getElementById('boostVal').textContent=curB.toFixed(2);
+  document.getElementById('battVal').textContent=Math.round(curBatt);
+  document.getElementById('boostBar').style.width=Math.min(100,(curB/10)*100)+'%';
+  document.getElementById('battBar').style.width=Math.min(100,curBatt)+'%';
+  cd.b.push(curB);cd.b.shift();
+  cd.ba.push(curBatt);cd.ba.shift();
+  drawChart('boostChart',cd.b,10,'#FFD700');
+  drawChart('battChart',cd.ba,100,'#00E676');
+}
+setInterval(updateMeters,50);
+
+function drawChart(id,data,mx,col){
+  const cv=document.getElementById(id);
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  cv.width=cv.offsetWidth||300;cv.height=70;
+  ctx.clearRect(0,0,cv.width,cv.height);
+  ctx.strokeStyle='rgba(255,255,255,.05)';ctx.lineWidth=1;
+  [0,1,2,3].forEach(i=>{const y=(cv.height/3)*i;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(cv.width,y);ctx.stroke()});
+  ctx.beginPath();
+  const gr=ctx.createLinearGradient(0,0,cv.width,0);
+  gr.addColorStop(0,col+'33');gr.addColorStop(1,col);
+  ctx.strokeStyle=gr;ctx.lineWidth=1.5;
+  data.forEach((v,i)=>{
+    const x=(i/(data.length-1))*cv.width;
+    const y=cv.height-(v/mx)*cv.height*.85-3;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  ctx.lineTo(cv.width,cv.height);ctx.lineTo(0,cv.height);ctx.closePath();
+  const fg=ctx.createLinearGradient(0,0,0,cv.height);
+  fg.addColorStop(0,col+'1A');fg.addColorStop(1,'transparent');
+  ctx.fillStyle=fg;ctx.fill();
+}
+
+// ── 5 SYSTEM METRIC COUNTERS ─────────────────────────────
+// Simulated real-time system metrics: CPU%, RAM GB, GPU RAM GB, GPU FPS, GPU Resolution boost%
+let metricState = {
+  cpu: 45, cpuT: 45,
+  ram: 6.2, ramT: 6.2,
+  gpuram: 4.1, gpuramT: 4.1,
+  gpurender: 60, gpurenderT: 60,
+  gpures: 100, gpuresT: 287,  // starts at 100%, builds up
+};
+
+function updateRing(ringId, txtId, value, max, label) {
+  const ring = document.getElementById(ringId);
+  const txt = document.getElementById(txtId);
+  if(!ring || !txt) return;
+  const pct = Math.min(value / max, 1);
+  const circumference = 138; // 2 * PI * r(22)
+  ring.style.strokeDashoffset = circumference - (circumference * pct);
+  txt.textContent = label;
+}
+
+function updateSystemMetrics(){
+  const t = Date.now() * .001;
+
+  // CPU: 20–88%, fluctuates with boost
+  metricState.cpuT = boosting ? 72 + Math.sin(t*3)*12 : eco ? 18 + Math.sin(t*.7)*6 : 38 + Math.sin(t*1.3)*22 + Math.sin(t*2.1)*8;
+  metricState.cpu += (metricState.cpuT - metricState.cpu) * .05;
+
+  // RAM: 3.8–13.6 GB
+  metricState.ramT = boosting ? 10.5 + Math.sin(t*.9)*2.2 : eco ? 4.1 + Math.sin(t*.4)*.6 : 6.8 + Math.sin(t*.7)*2.1;
+  metricState.ram += (metricState.ramT - metricState.ram) * .04;
+
+  // GPU RAM: 2.4–10.8 GB
+  metricState.gpuramT = boosting ? 9.2 + Math.sin(t*1.1)*1.4 : eco ? 2.8 + Math.sin(t*.5)*.4 : 5.3 + Math.sin(t*.9)*2.5;
+  metricState.gpuram += (metricState.gpuramT - metricState.gpuram) * .04;
+
+  // GPU Rendering FPS: 40–144
+  metricState.gpurenderT = boosting ? 138 + Math.sin(t*4)*5 : eco ? 45 + Math.sin(t)*5 : 75 + Math.sin(t*2)*28 + Math.sin(t*.8)*12;
+  metricState.gpurender += (metricState.gpurenderT - metricState.gpurender) * .06;
+
+  // GPU Resolution boost: climbs toward @Omega level when boosting
+  metricState.gpuresT = boosting ? 420 + Math.sin(t*1.5)*40 : eco ? 110 + Math.sin(t*.3)*10 : 180 + Math.sin(t*.6)*60 + t%10*3;
+  metricState.gpures += (metricState.gpuresT - metricState.gpures) * .03;
+  if(metricState.gpures > 999) metricState.gpures = 999;
+
+  const cpu = Math.round(metricState.cpu);
+  const ram = metricState.ram.toFixed(1);
+  const gpuRam = metricState.gpuram.toFixed(1);
+  const gpuFps = Math.round(metricState.gpurender);
+  const gpuRes = Math.round(metricState.gpures);
+
+  // Update values
+  const cpuEl = document.getElementById('cpuVal');
+  const ramEl = document.getElementById('ramVal');
+  const gpuRamEl = document.getElementById('gpuRamVal');
+  const gpuRendEl = document.getElementById('gpuRenderVal');
+  const gpuResEl = document.getElementById('gpuResVal');
+
+  if(cpuEl) cpuEl.textContent = cpu;
+  if(ramEl) ramEl.textContent = ram;
+  if(gpuRamEl) gpuRamEl.textContent = gpuRam;
+  if(gpuRendEl) gpuRendEl.textContent = gpuFps;
+  if(gpuResEl) gpuResEl.textContent = gpuRes;
+
+  // Trend labels
+  const cpuT = document.getElementById('cpuTrend');
+  const ramT = document.getElementById('ramTrend');
+  const gpuRamT = document.getElementById('gpuRamTrend');
+  const gpuRendT = document.getElementById('gpuRenderTrend');
+  const gpuResT = document.getElementById('gpuResTrend');
+
+  if(cpuT) cpuT.textContent = cpu > 80 ? '🔴 HIGH LOAD' : cpu > 50 ? '🟡 ACTIVE' : '🟢 OPTIMAL';
+  if(ramT) ramT.textContent = '/ 16 GB TOTAL';
+  if(gpuRamT) gpuRamT.textContent = '/ 12 GB VRAM';
+  if(gpuRendT) gpuRendT.textContent = gpuFps >= 120 ? '⚡ @OMEGA FPS' : gpuFps >= 60 ? '✓ SMOOTH' : '⚠ LOW FPS';
+  if(gpuResT) gpuResT.textContent = gpuRes > 300 ? '⚡ @OMEGA LEVEL' : gpuRes > 150 ? '✓ BOOSTED' : 'BASE LEVEL';
+
+  // Update rings
+  updateRing('cpuRing','cpuRingTxt', cpu, 100, cpu+'%');
+  updateRing('ramRing','ramRingTxt', parseFloat(ram), 16, ram+'G');
+  updateRing('gpuramRing','gpuramRingTxt', parseFloat(gpuRam), 12, gpuRam+'G');
+  updateRing('gpurenderRing','gpurenderRingTxt', gpuFps, 144, gpuFps+'');
+  updateRing('gpuresRing','gpuresRingTxt', Math.min(gpuRes,999), 999, gpuRes+'%');
+}
+setInterval(updateSystemMetrics, 80);
+
+// ── SCROLL PROGRESS ───────────────────────────────────────
+window.addEventListener('scroll',()=>{
+  const p=(window.scrollY/(document.documentElement.scrollHeight-window.innerHeight))*100;
+  document.getElementById('scrollProg').style.width=p+'%';
+});
+</script>
+
+<!--
+═══════════════════════════════════════════════════════════════
+HOW TO CONNECT THE 25 MOTORS TO YOUR WEBAPP
+Just Keff Tech Labs · SuperS.A.M Integration Guide
+═══════════════════════════════════════════════════════════════
+
+STEP 1 — FILES IN SAME FOLDER (GitHub repo root or server root):
+  index.html              ← this file
+  IMG_0097.jpeg           ← your logo (already connected via src="IMG_0097.jpeg")
+  gemini_generated_video_9EA4E652.mp4  ← your video (already connected via src=".mp4")
+  motors.js               ← your existing motors file
+  berg_engine.js          ← your existing BERG engine file
+  vnet_card.js            ← your existing vnet card file
+  app.py                  ← your Python backend (if using Flask/FastAPI)
+
+STEP 2 — IMPORT YOUR EXISTING JS FILES:
+  Add these lines at the bottom of <body>, BEFORE </body>:
+  <script src="berg_engine.js"></script>
+  <script src="motors.js"></script>
+  <script src="vnet_card.js"></script>
+
+STEP 3 — CONNECT BERG ENGINE:
+  In berg_engine.js, export the engine object:
+  window.BERG = { boost: false, eco: false, power: 0, ratio: 0.99 };
+  Then in index.html, bind it:
+  document.getElementById('boostBtn').addEventListener('click', () => {
+    window.BERG.boost = !window.BERG.boost;
+  });
+
+STEP 4 — CONNECT MOTORS ARRAY:
+  In motors.js, make motors globally available:
+  window.GOLEMOTOR_MOTORS = [ ...your 25 motor objects... ];
+  Then pass to renderMotors() in this file by replacing the
+  local MOTORS array with: const MOTORS = window.GOLEMOTOR_MOTORS;
+
+STEP 5 — CONNECT BACKEND (app.py):
+  If using Flask:
+  from flask import Flask, jsonify
+  app = Flask(__name__, static_folder='.')
+  @app.route('/api/metrics')
+  def metrics():
+    return jsonify({ 'cpu': getCPU(), 'ram': getRAM(), ... })
+
+  Then in JS, replace simulated values:
+  setInterval(async () => {
+    const res = await fetch('/api/metrics');
+    const data = await res.json();
+    document.getElementById('cpuVal').textContent = data.cpu;
+  }, 1000);
+
+STEP 6 — GITHUB PAGES DEPLOY:
+  Your repo: github.com/[username]/Multimotor-os
+  Enable Pages: Settings → Pages → Branch: main → Save
+  Your site will be live at: [username].github.io/Multimotor-os
+
+═══════════════════════════════════════════════════════════════
+-->
+
+</body>
+</html>
