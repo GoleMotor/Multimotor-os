@@ -1314,6 +1314,1109 @@ window.addEventListener('load', () => {
     else { addLog('srv', '📱 BACKGROUND — Serveur continue le mining continu'); }
   });
 });
+
+
+<!-- ═══════════════════════════════════════════════════════════
+  GOLEMOTOR · SUPERSAM CORE · BERG ENGINE INTEGRATION BLOCK
+  Just Keff Tech Labs · v5.0 · 2026 · Confidentiel
+  
+  INSTRUCTIONS :
+  Coller ce bloc entier juste AVANT </body> dans index.html.
+  Aucune dépendance externe. Tout est inline.
+  ═══════════════════════════════════════════════════════════ -->
+
+<style>
+/* ── PROFILER MODAL ─────────────────────────────────────── */
+#sysModal {
+  display:none;position:fixed;inset:0;z-index:9000;
+  background:rgba(0,0,0,.96);backdrop-filter:blur(16px);
+  overflow-y:auto;padding:2rem 1rem;
+}
+#sysModal.open { display:block; }
+.sm-wrap {
+  max-width:820px;margin:0 auto;
+  border:1px solid rgba(255,215,0,.2);
+  background:#000;position:relative;
+}
+.sm-header {
+  padding:1.2rem 1.5rem;
+  border-bottom:1px solid rgba(255,215,0,.12);
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(255,215,0,.03);
+}
+.sm-title {
+  font-family:'Orbitron',monospace;font-size:.9rem;font-weight:900;
+  letter-spacing:.2em;color:#FFD700;
+}
+.sm-close {
+  font-family:'Orbitron',monospace;font-size:.7rem;
+  background:transparent;border:1px solid rgba(255,68,68,.4);
+  color:rgba(255,68,68,.7);padding:.4rem .9rem;cursor:pointer;
+  letter-spacing:.15em;transition:all .25s;
+}
+.sm-close:hover { background:rgba(255,68,68,.1);color:#FF4444; }
+.sm-body { padding:1.5rem; }
+.sm-grid { display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1.2rem; }
+@media(max-width:520px){ .sm-grid{grid-template-columns:1fr} }
+.sm-field { display:flex;flex-direction:column;gap:.35rem; }
+.sm-lbl {
+  font-family:'Orbitron',monospace;font-size:.55rem;letter-spacing:.3em;
+  color:rgba(255,215,0,.6);text-transform:uppercase;
+}
+.sm-inp {
+  background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.2);
+  color:#fff;font-family:'Orbitron',monospace;font-size:1rem;font-weight:700;
+  padding:.65rem .9rem;outline:none;transition:all .3s;width:100%;
+  -webkit-appearance:none;
+}
+.sm-inp:focus { border-color:#FFD700;box-shadow:0 0 20px rgba(255,215,0,.15); }
+.sm-inp.confirmed { border-color:#00E676;color:#00E676; }
+.sm-inp::placeholder { font-size:.75rem;font-weight:400;color:rgba(255,255,255,.2); }
+.sm-inp[type=range] {
+  padding:.3rem 0;background:transparent;border:none;cursor:pointer;
+}
+.sm-inp[type=range]::-webkit-slider-track {
+  height:3px;background:rgba(255,215,0,.2);
+}
+.sm-inp[type=range]::-webkit-slider-thumb {
+  -webkit-appearance:none;width:13px;height:13px;
+  background:#FFD700;margin-top:-5px;box-shadow:0 0 8px rgba(255,215,0,.5);
+}
+.sm-range-row { display:flex;gap:.5rem;align-items:center; }
+.sm-range-disp {
+  font-family:'Orbitron',monospace;font-size:.85rem;
+  font-weight:700;color:#FFD700;min-width:52px;text-align:right;
+}
+
+/* RAM required block */
+.ram-block {
+  grid-column:1/-1;padding:1rem 1.2rem;
+  border:1px solid rgba(255,68,68,.4);background:rgba(255,68,68,.03);
+  position:relative;transition:all .4s;
+}
+.ram-block.ok { border-color:rgba(0,230,118,.4);background:rgba(0,230,118,.03); }
+.ram-block-label {
+  font-family:'Orbitron',monospace;font-size:.55rem;letter-spacing:.3em;
+  color:#FF4444;display:flex;align-items:center;gap:.5rem;margin-bottom:.6rem;
+}
+.ram-block.ok .ram-block-label { color:#00E676; }
+.ram-req-badge {
+  font-size:.45rem;padding:.1rem .4rem;background:#FF4444;color:#000;font-weight:900;
+}
+.ram-block.ok .ram-req-badge { background:#00E676; }
+.ram-row { display:flex;gap:.6rem;align-items:stretch; }
+.ram-main-inp {
+  flex:1;background:rgba(255,68,68,.05);border:1px solid rgba(255,68,68,.5);
+  color:#fff;font-family:'Orbitron',monospace;font-size:1.4rem;font-weight:900;
+  padding:.7rem 1rem;outline:none;transition:all .3s;text-align:center;
+}
+.ram-main-inp:focus { border-color:#FFD700;box-shadow:0 0 20px rgba(255,215,0,.2); }
+.ram-main-inp.ok { border-color:#00E676;color:#00E676; }
+.ram-confirm {
+  font-family:'Orbitron',monospace;font-size:.65rem;font-weight:700;
+  letter-spacing:.12em;padding:.7rem 1rem;background:transparent;
+  border:1px solid rgba(255,68,68,.5);color:rgba(255,68,68,.8);
+  cursor:pointer;transition:all .3s;white-space:nowrap;
+}
+.ram-confirm:hover { background:rgba(255,68,68,.1); }
+.ram-confirm.ok { border-color:#00E676;color:#00E676;background:rgba(0,230,118,.08); }
+.ram-presets { display:flex;gap:.35rem;flex-wrap:wrap;margin-top:.7rem; }
+.ram-preset {
+  font-family:'Orbitron',monospace;font-size:.58rem;letter-spacing:.1em;
+  padding:.28rem .65rem;background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.1);color:rgba(255,255,255,.4);
+  cursor:pointer;transition:all .2s;
+}
+.ram-preset:hover { border-color:#FFD700;color:#FFD700;background:rgba(255,215,0,.06); }
+.ram-why {
+  font-family:'Orbitron',monospace;font-size:.52rem;line-height:2;
+  color:rgba(255,255,255,.3);padding:.5rem .7rem;
+  background:rgba(0,0,0,.5);border-left:2px solid rgba(255,68,68,.3);
+  margin-bottom:.8rem;
+}
+
+/* Preset select */
+.sm-select {
+  background:rgba(255,215,0,.03);border:1px solid rgba(255,215,0,.2);
+  color:#fff;font-family:'Orbitron',monospace;font-size:.78rem;
+  padding:.65rem .9rem;outline:none;cursor:pointer;width:100%;
+  transition:all .3s;-webkit-appearance:none;
+}
+.sm-select:focus { border-color:#FFD700; }
+
+/* Action buttons */
+.sm-actions { display:flex;gap:.8rem;flex-wrap:wrap;margin-top:1.5rem; }
+.sm-btn {
+  font-family:'Orbitron',monospace;font-size:.7rem;font-weight:700;
+  letter-spacing:.15em;text-transform:uppercase;padding:.8rem 1.6rem;
+  border:none;cursor:pointer;transition:all .3s;display:flex;
+  align-items:center;gap:.5rem;
+}
+.sm-btn-detect {
+  background:linear-gradient(135deg,#8B6914,#FFD700,#FFF9C4,#FFD700,#8B6914);
+  background-size:200% 200%;color:#000;font-weight:900;
+  animation:shimmer 2.5s ease infinite;
+}
+.sm-btn-detect:hover { box-shadow:0 0 40px rgba(255,215,0,.7); }
+.sm-btn-apply {
+  background:transparent;border:1px solid rgba(0,229,255,.4);color:#00E5FF;
+}
+.sm-btn-apply:hover { background:rgba(0,229,255,.08);box-shadow:0 0 25px rgba(0,229,255,.3); }
+.sm-btn-export {
+  background:transparent;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.5);
+}
+.sm-btn-export:hover { border-color:rgba(255,255,255,.5);color:#fff; }
+
+/* BANNER */
+#bergBanner {
+  background:rgba(0,0,0,.97);border-bottom:1px solid rgba(255,215,0,.12);
+  padding:.55rem 2rem;display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;
+  font-family:'Orbitron',monospace;font-size:.55rem;letter-spacing:.12em;
+  position:sticky;top:58px;z-index:900;
+}
+.bb-item { display:flex;flex-direction:column;gap:.1rem; }
+.bb-lbl { color:rgba(255,255,255,.25);font-size:.45rem;letter-spacing:.2em; }
+.bb-val { color:#FFD700;font-weight:700;font-size:.65rem; }
+.bb-val.c { color:#00E5FF; }
+.bb-val.g { color:#00E676; }
+.bb-val.w { color:#fff; }
+.bb-divider { width:1px;height:30px;background:rgba(255,215,0,.1);flex-shrink:0; }
+.bb-open-btn {
+  font-family:'Orbitron',monospace;font-size:.58rem;letter-spacing:.15em;
+  padding:.3rem .9rem;background:transparent;cursor:pointer;transition:all .25s;
+  margin-left:auto;flex-shrink:0;
+}
+.bb-open-btn.no-profile {
+  border:1px solid rgba(255,68,68,.5);color:rgba(255,68,68,.7);
+  animation:border-glow 2s ease-in-out infinite;
+}
+.bb-open-btn.has-profile {
+  border:1px solid rgba(255,215,0,.3);color:rgba(255,215,0,.6);
+}
+.bb-open-btn:hover { box-shadow:0 0 20px rgba(255,215,0,.3); }
+
+/* PAWA ALWAYS-BETTER bar */
+#pawaBetter {
+  height:2px;width:0%;
+  background:linear-gradient(90deg,#8B6914,#FFD700,#FFF9C4);
+  transition:width 1s ease;position:fixed;bottom:0;left:0;right:0;z-index:9998;
+}
+
+/* JSON export flash */
+#exportFlash {
+  position:fixed;bottom:2rem;right:2rem;z-index:9997;
+  font-family:'Orbitron',monospace;font-size:.65rem;letter-spacing:.2em;
+  padding:.6rem 1.2rem;background:#000;border:1px solid rgba(0,230,118,.5);
+  color:#00E676;opacity:0;pointer-events:none;transition:opacity .4s;
+}
+</style>
+
+<!-- PAWA ALWAYS-BETTER INDICATOR -->
+
+<div id="pawaBetter"></div>
+<!-- JSON EXPORT FLASH -->
+<div id="exportFlash">✓ JSON EXPORTÉ</div>
+
+<!-- ═══════════════ BERG SYS MODAL ═══════════════ -->
+
+<div id="sysModal">
+  <div class="sm-wrap">
+    <div class="sm-header">
+      <div class="sm-title">⚙ BERG · SYSTEM PROFILER · ARGUMENTS VECTORIELS</div>
+      <button class="sm-close" onclick="closeSysModal()">✕ FERMER</button>
+    </div>
+    <div class="sm-body">
+
+```
+  <!-- PRESET MACHINE -->
+  <div style="margin-bottom:1rem">
+    <div class="sm-lbl" style="margin-bottom:.4rem">PRESET MACHINE</div>
+    <select class="sm-select" id="sm_type" onchange="applyBERGPreset()">
+      <option value="">— Sélectionner ou saisir manuellement —</option>
+      <option value="iphone15">iPhone 15 Pro · A17 Pro · 8GB · 120Hz</option>
+      <option value="iphone14">iPhone 14 · A15 Bionic · 6GB · 60Hz</option>
+      <option value="macbook_m3">MacBook M3 Pro · 12c · 18GB · 120Hz</option>
+      <option value="macbook_m1">MacBook M1 · 8c · 8GB · 60Hz</option>
+      <option value="gaming_mid">PC Gaming RTX 3070 · 8c · 16GB · 144Hz</option>
+      <option value="gaming_high">PC Gaming RTX 4090 · 24c · 64GB · 240Hz</option>
+      <option value="laptop">Laptop Intel i7 · 8c · 16GB · 60Hz</option>
+    </select>
+  </div>
+
+  <div class="sm-grid">
+
+    <!-- RAM — OBLIGATOIRE -->
+    <div class="ram-block" id="sm_ramBlock">
+      <div class="ram-block-label">
+        <span class="ram-req-badge" id="sm_ramBadge">REQUIS</span>
+        RAM RÉELLE — ARGUMENT OBLIGATOIRE
+      </div>
+      <div class="ram-why">
+        ⚠ navigator.deviceMemory plafonné à 8 GB par Privacy Budget<br>
+        → La RAM réelle est l'argument #1 du vecteur CPUv BERG
+      </div>
+      <div class="ram-row">
+        <input class="ram-main-inp" type="number" id="sm_ram"
+          placeholder="Ta RAM en GB" min="1" max="2048"
+          oninput="onSMRamInput()">
+        <button class="ram-confirm" id="sm_ramBtn" onclick="confirmSMRam()">✓ OK</button>
+      </div>
+      <div class="ram-presets">
+        <span style="font-family:'Orbitron',monospace;font-size:.5rem;color:rgba(255,255,255,.2)">→</span>
+        <button class="ram-preset" onclick="setSMRamPreset(4)">4</button>
+        <button class="ram-preset" onclick="setSMRamPreset(6)">6</button>
+        <button class="ram-preset" onclick="setSMRamPreset(8)">8</button>
+        <button class="ram-preset" onclick="setSMRamPreset(12)">12</button>
+        <button class="ram-preset" onclick="setSMRamPreset(16)">16</button>
+        <button class="ram-preset" onclick="setSMRamPreset(32)">32</button>
+        <button class="ram-preset" onclick="setSMRamPreset(64)">64</button>
+        <button class="ram-preset" onclick="setSMRamPreset(128)">128</button>
+      </div>
+    </div>
+
+    <!-- CPU CORES -->
+    <div class="sm-field">
+      <div class="sm-lbl">Coeurs CPU</div>
+      <input class="sm-inp" type="number" id="sm_cores"
+        placeholder="ex: 8" min="1" max="256" oninput="bergRecalc()">
+    </div>
+
+    <!-- CPU GHz -->
+    <div class="sm-field">
+      <div class="sm-lbl">Fréquence GHz</div>
+      <input class="sm-inp" type="number" id="sm_freq"
+        placeholder="ex: 3.5" step="0.1" min="0.5" max="6" oninput="bergRecalc()">
+    </div>
+
+    <!-- TDP CPU -->
+    <div class="sm-field">
+      <div class="sm-lbl">TDP CPU (Watts) · thermalJoules</div>
+      <div class="sm-range-row">
+        <input class="sm-inp" type="range" id="sm_tdp"
+          min="5" max="350" value="65" style="flex:1"
+          oninput="document.getElementById('sm_tdp_d').textContent=this.value+'W';bergRecalc()">
+        <div class="sm-range-disp" id="sm_tdp_d">65W</div>
+      </div>
+    </div>
+
+    <!-- VRAM -->
+    <div class="sm-field">
+      <div class="sm-lbl">VRAM GPU (GB)</div>
+      <input class="sm-inp" type="number" id="sm_vram"
+        placeholder="ex: 8" min="0" max="80" oninput="bergRecalc()">
+    </div>
+
+    <!-- TDP GPU -->
+    <div class="sm-field">
+      <div class="sm-lbl">TDP GPU (Watts)</div>
+      <div class="sm-range-row">
+        <input class="sm-inp" type="range" id="sm_gtdp"
+          min="15" max="500" value="150" style="flex:1"
+          oninput="document.getElementById('sm_gtdp_d').textContent=this.value+'W';bergRecalc()">
+        <div class="sm-range-disp" id="sm_gtdp_d">150W</div>
+      </div>
+    </div>
+
+    <!-- FPS -->
+    <div class="sm-field">
+      <div class="sm-lbl">Écran FPS max (Hz)</div>
+      <input class="sm-inp" type="number" id="sm_fps"
+        placeholder="ex: 60" min="24" max="360" oninput="bergRecalc()">
+    </div>
+
+    <!-- RESOLUTION -->
+    <div class="sm-field">
+      <div class="sm-lbl">Résolution Écran</div>
+      <select class="sm-select" id="sm_res" onchange="bergRecalc()">
+        <option value="921600">HD 1280×720</option>
+        <option value="2073600">FHD 1920×1080</option>
+        <option value="3686400">QHD 2560×1440</option>
+        <option value="8294400" selected>4K 3840×2160</option>
+        <option value="9000000">3000×3000 (GoleMotor Target)</option>
+        <option value="33177600">8K 7680×4320</option>
+      </select>
+    </div>
+
+    <!-- PAWA BANK -->
+    <div class="sm-field">
+      <div class="sm-lbl">PAWA_BANK (Watts Argoniques)</div>
+      <div class="sm-range-row">
+        <input class="sm-inp" type="range" id="sm_pawa"
+          min="0" max="1000000000" value="0" step="1000" style="flex:1"
+          oninput="bergRecalc()">
+        <div class="sm-range-disp" id="sm_pawa_d" style="font-size:.6rem;min-width:50px">0</div>
+      </div>
+    </div>
+
+  </div><!-- /sm-grid -->
+
+  <!-- LIVE PREVIEW VECTEURS -->
+  <div id="sm_preview" style="
+    font-family:'Orbitron',monospace;font-size:.6rem;line-height:2.2;
+    padding:.8rem 1rem;background:rgba(255,215,0,.02);
+    border:1px solid rgba(255,215,0,.08);margin-bottom:1rem;
+    color:rgba(255,255,255,.5);letter-spacing:.08em;
+  ">
+    <span style="color:rgba(255,215,0,.4)">⬡ EN ATTENTE — confirmez RAM + remplissez les champs</span>
+  </div>
+
+  <!-- ACTIONS -->
+  <div class="sm-actions">
+    <button class="sm-btn sm-btn-detect" onclick="bergAutoDetect()">
+      🔍 AUTO-DÉTECTER
+    </button>
+    <button class="sm-btn sm-btn-apply" onclick="bergApplyProfile()">
+      ⚡ APPLIQUER AU DASHBOARD
+    </button>
+    <button class="sm-btn sm-btn-export" onclick="bergExportJSON()">
+      📥 EXPORTER JSON
+    </button>
+  </div>
+
+</div><!-- /sm-body -->
+```
+
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════════════════════════
+// BERG ENGINE CORE — SUPERSAM v5.0
+// Self-contained · Tout dans index.html
+// Encyclopédie v5 : thermalJoules · PAWA · splits · @Omega
+// ════════════════════════════════════════════════════════════════
+
+const BERG = (function(){
+
+  // ── CONSTANTES ────────────────────────────────────────────
+  const OMEGA    = 1_000_000_000;
+  const DECUPLE  = 10;
+  const STORE_KEY = 'golemotor_sys_v5';
+  const SIZE_BYTES = 4096;   // fragment moyen
+  const NOISE_WA   = 0.003;  // noiseWatts RMS
+
+  // ── SPLITS ALISCIA B (encyclopédie v5 §Formules) ─────────
+  const SPLITS = {
+    ECONOMY: { cpu:.55, cpuv:.30, gpu:.10, gpuv:.05 },
+    BERG:    { cpu:.25, cpuv:.25, gpu:.25, gpuv:.25 },
+    BOOST:   { cpu:.33, cpuv:.20, gpu:.34, gpuv:.13 },
+  };
+
+  // ── AFFINITÉ NŒUD PAR MOTEUR (26 moteurs) ─────────────────
+  // Dérivé des descriptions encyclopédie v5
+  const NODE = [
+    'cpu','cpu','cpuv','cpuv','cpu','cpuv','cpu','cpu',
+    'cpuv','cpu','cpu','cpuv','cpu','cpuv','gpuv','cpuv',
+    'cpu','cpuv','gpuv','cpuv','gpu','gpu','cpu','cpu',
+    'gpuv','cpu'  // 26 = BERG MINING
+  ];
+
+  // ── PRESETS MACHINE ───────────────────────────────────────
+  const PRESETS = {
+    iphone15:    {cores:6,  freq:3.78,tdpW:7,   ramGB:null,vramGB:8,  fps:120,gtdpW:15, res:2556*1179},
+    iphone14:    {cores:6,  freq:3.46,tdpW:6,   ramGB:null,vramGB:6,  fps:60, gtdpW:12, res:2532*1170},
+    macbook_m3:  {cores:12, freq:4.05,tdpW:35,  ramGB:null,vramGB:18, fps:120,gtdpW:35, res:3024*1964},
+    macbook_m1:  {cores:8,  freq:3.2, tdpW:20,  ramGB:null,vramGB:8,  fps:60, gtdpW:20, res:2560*1600},
+    gaming_mid:  {cores:8,  freq:3.8, tdpW:65,  ramGB:null,vramGB:8,  fps:144,gtdpW:170,res:8294400},
+    gaming_high: {cores:24, freq:5.8, tdpW:253, ramGB:null,vramGB:24, fps:240,gtdpW:450,res:8294400},
+    laptop:      {cores:8,  freq:2.8, tdpW:45,  ramGB:null,vramGB:4,  fps:60, gtdpW:80, res:2073600},
+  };
+
+  // ── ÉTAT ─────────────────────────────────────────────────
+  let _sys = {
+    cores:4, freq:2.5, tdpW:65, ramGB:null,
+    vramGB:4, fps:60, resPixels:2073600, gtdpW:100,
+    pawaBank:0, confirmed:false, timestamp:null
+  };
+  let _ramConfirmed = false;
+  let _driftMs = 0.8;
+  let _rafT0 = performance.now();
+  let _pawaAccum = 0; // accumulation session courante
+
+  // ══════════════════════════════════════════════════════════
+  // FORMULES BERG (encyclopédie v5)
+  // ══════════════════════════════════════════════════════════
+
+  const api = {
+
+    // 1 + pawaBank/Ω
+    pawFactor() { return 1 + (_sys.pawaBank / OMEGA); },
+
+    // driftMs × TDP
+    thermalJoules(gpu=false) {
+      return _driftMs * (gpu ? _sys.gtdpW : _sys.tdpW);
+    },
+
+    // sizeBytes × thermalJ × noiseWatts
+    pawa() { return SIZE_BYTES * this.thermalJoules() * NOISE_WA; },
+
+    // PAWA × RECYCLATING² (×26.75 encyclopédie)
+    pawaEMP() { return this.pawa() * 26.75; },
+
+    // RAM CPUv vecteur : ramGB × split.cpuv × pf × DECUPLE
+    cpuvRAM(mode='BERG') {
+      if (!_sys.ramGB) return null;
+      return _sys.ramGB * SPLITS[mode].cpuv * this.pawFactor() * DECUPLE;
+    },
+
+    // VRAM GPUv vecteur
+    gpuvVRAM(mode='BERG') {
+      if (!_sys.vramGB) return null;
+      return _sys.vramGB * SPLITS[mode].gpuv * this.pawFactor() * DECUPLE;
+    },
+
+    // FPS GPUv vecteur
+    gpuvFPS(mode='BERG') {
+      if (!_sys.fps) return null;
+      return _sys.fps * SPLITS[mode].gpu * this.pawFactor() * DECUPLE;
+    },
+
+    // Résolution GPUv target
+    gpuvRes() {
+      return Math.min(Math.round(Math.sqrt(_sys.resPixels) * this.pawFactor()), 9999);
+    },
+
+    // Score d'effectualisation (0–400%)
+    score(realFPS=null) {
+      if (!_sys.ramGB) return 0;
+      const fps = realFPS || _sys.fps;
+      const base =
+        Math.min(_sys.ramGB/128,1)*.20 + Math.min(_sys.freq/6,1)*.20 +
+        Math.min(_sys.cores/24,1)*.15 + Math.min(_sys.vramGB/24,1)*.20 +
+        Math.min(fps/300,1)*.15 + Math.min(_sys.resPixels/9e6,1)*.10;
+      return Math.min(base*100 + (_sys.pawaBank/OMEGA)*300, 400);
+    },
+
+    // GO/s et pct pour un moteur donné
+    motorVals(idx, boost=false, eco=false) {
+      const mode  = boost?'BOOST':eco?'ECONOMY':'BERG';
+      const split = SPLITS[mode];
+      const pf    = this.pawFactor();
+      const node  = NODE[idx] || 'cpu';
+
+      if (!_sys.ramGB) {
+        // Sans profil → valeur déterministe stable
+        const r = ((idx*31+17)%220)/100 + 0.3;
+        return { gos: boost?r*3.2:eco?r*.5:r, pct: 10+(idx*7+13)%75 };
+      }
+
+      const tNorm = Math.min(this.thermalJoules()/100, 3.0);
+      let cap;
+      if (node==='cpu')  cap = _sys.ramGB  * split.cpu  * pf;
+      else if (node==='cpuv') cap = _sys.ramGB  * split.cpuv * pf * DECUPLE;
+      else if (node==='gpu')  cap = _sys.vramGB * split.gpu  * pf * DECUPLE;
+      else                    cap = _sys.vramGB * split.gpuv * pf * DECUPLE;
+
+      const gos = Math.max(Math.min(cap * tNorm, 999.99), 0.01);
+      const ceil = node.startsWith('gpu') ? _sys.vramGB*DECUPLE : _sys.ramGB*DECUPLE;
+      const pct = Math.min(Math.round((cap/ceil)*100), 100);
+      return { gos, pct: Math.max(pct, 5) };
+    },
+
+    // Plafonds réels pour rings
+    ceilings(boost=false, eco=false) {
+      return {
+        ramMax:    _sys.ramGB    || 16,
+        gpuramMax: _sys.vramGB   || 12,
+        fpsMax:    _sys.fps      || 144,
+        confirmed: !!_sys.ramGB,
+        pf:        this.pawFactor()
+      };
+    },
+
+    // Injection vapeur électrique (encyclopédie v5)
+    injectionWave(node='cpu', t=0) {
+      const mode = window.boosting?'BOOST':window.eco?'ECONOMY':'BERG';
+      const splash = this.pawaEMP() * 0.99;
+      const dc     = splash * (SPLITS[mode][node]||0.25);
+      const pulse  = dc * (0.15+0.15*Math.abs(Math.sin(t*.01))) * Math.sin(t*60*.001);
+      return dc + pulse;
+    },
+
+    // PAWA accumulation — "toujours faire mieux"
+    tickPAWA() {
+      const gain = this.pawaEMP() * 0.01; // 1% BERG ratio → bank
+      _sys.pawaBank = Math.min(_sys.pawaBank + gain, OMEGA);
+      _pawaAccum   += gain;
+      return _sys.pawaBank;
+    },
+
+    // RAF SAMPLER — mesure drift réel
+    rafTick(now) {
+      const dt = now - _rafT0;
+      _driftMs = Math.max(0.1, Math.min(dt - 16.67, 20)); // drift vs 60fps target
+      if (_driftMs < 0) _driftMs = Math.abs(_driftMs);
+      _rafT0 = now;
+    },
+
+    // PERSISTENCE
+    save() {
+      const data = Object.assign({}, _sys, {confirmed:true, timestamp:Date.now()});
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(data)); } catch(e){}
+      return data;
+    },
+    load() {
+      try {
+        const r = localStorage.getItem(STORE_KEY);
+        if (r) { _sys = JSON.parse(r); _ramConfirmed = !!_sys.ramGB; return true; }
+      } catch(e){}
+      return false;
+    },
+    clear() { localStorage.removeItem(STORE_KEY); },
+    exportJSON() { return JSON.stringify(_sys, null, 2); },
+
+    // SETTERS
+    setSYS(obj) {
+      Object.assign(_sys, obj);
+      if (_sys.ramGB) _ramConfirmed = true;
+    },
+    setRam(gb) { _sys.ramGB = gb; _ramConfirmed = true; },
+    isReady()  { return _ramConfirmed && !!_sys.ramGB; },
+    getSYS()   { return Object.assign({}, _sys); },
+  };
+
+  // Auto-load
+  api.load();
+  return api;
+})(); // end BERG
+
+// ════════════════════════════════════════════════════════════════
+// MOTEUR #26 — BERG MINING ENGINE (ajout à MOTORS[])
+// ════════════════════════════════════════════════════════════════
+if (typeof MOTORS !== 'undefined' && MOTORS.length === 25) {
+  MOTORS.push({
+    n:'26', name:'BERG MINING ENGINE',
+    desc:'Mining silencieux 24h — BERG_SPLIT 50/50 cooperative',
+    tier:'PAID', s:'DORMANT'
+  });
+  // Étendre MV[] pour le moteur #26
+  if (typeof MV !== 'undefined') {
+    MV.push({ gos: 0.5, pct: 20 });
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+// BANNER SYS — injection dans le DOM du dashboard
+// ════════════════════════════════════════════════════════════════
+function injectBanner() {
+  const dash = document.getElementById('dashboard');
+  if (!dash || document.getElementById('bergBanner')) return;
+  const b = document.createElement('div');
+  b.id = 'bergBanner';
+  dash.insertBefore(b, dash.firstChild);
+  refreshBanner();
+}
+
+function refreshBanner() {
+  const b = document.getElementById('bergBanner');
+  if (!b) return;
+  const ready = BERG.isReady();
+  const sys   = BERG.getSYS();
+  const pf    = BERG.pawFactor().toFixed(6);
+  const sc    = BERG.score().toFixed(1);
+  const pawaK = sys.pawaBank >= 1e9 ? '@OMEGA' :
+                sys.pawaBank >= 1e6 ? (sys.pawaBank/1e6).toFixed(2)+'M' :
+                sys.pawaBank >= 1e3 ? (sys.pawaBank/1e3).toFixed(1)+'K' :
+                sys.pawaBank.toFixed(0);
+
+  if (!ready) {
+    b.innerHTML = `
+      <span style="color:rgba(255,68,68,.6);font-size:.6rem">⚠ BERG ARGS NON CONFIRMÉS</span>
+      <span style="color:rgba(255,255,255,.25)">Métriques en simulation</span>
+      <button class="bb-open-btn no-profile" onclick="openSysModal()">
+        ⚙ CONFIGURER SYSTÈME
+      </button>`;
+    return;
+  }
+
+  b.innerHTML = `
+    <div class="bb-item"><div class="bb-lbl">BERG ARGS</div>
+      <div class="bb-val g">✅ ACTIFS</div></div>
+    <div class="bb-divider"></div>
+    <div class="bb-item"><div class="bb-lbl">RAM RÉELLE</div>
+      <div class="bb-val">${sys.ramGB} GB</div></div>
+    <div class="bb-item"><div class="bb-lbl">VRAM</div>
+      <div class="bb-val c">${sys.vramGB} GB</div></div>
+    <div class="bb-item"><div class="bb-lbl">CPU</div>
+      <div class="bb-val">${sys.cores}c · ${sys.freq}GHz</div></div>
+    <div class="bb-item"><div class="bb-lbl">TDP</div>
+      <div class="bb-val">${sys.tdpW}W+${sys.gtdpW}W</div></div>
+    <div class="bb-item"><div class="bb-lbl">FPS MAX</div>
+      <div class="bb-val c">${sys.fps} Hz</div></div>
+    <div class="bb-divider"></div>
+    <div class="bb-item"><div class="bb-lbl">PAWA×</div>
+      <div class="bb-val">${pf}</div></div>
+    <div class="bb-item"><div class="bb-lbl">PAWA BANK</div>
+      <div class="bb-val g">${pawaK}</div></div>
+    <div class="bb-item"><div class="bb-lbl">EFFECTUATION</div>
+      <div class="bb-val" style="color:${parseFloat(sc)>=100?'#00E676':parseFloat(sc)>=60?'#FFD700':'#fff'}">${sc}%</div></div>
+    <div class="bb-divider"></div>
+    <div class="bb-item"><div class="bb-lbl">CPUv RAM</div>
+      <div class="bb-val c">${(BERG.cpuvRAM(window.boosting?'BOOST':window.eco?'ECONOMY':'BERG')||0).toFixed(1)} GB/s</div></div>
+    <div class="bb-item"><div class="bb-lbl">GPUv FPS</div>
+      <div class="bb-val g">${Math.round(BERG.gpuvFPS(window.boosting?'BOOST':window.eco?'ECONOMY':'BERG')||0)}</div></div>
+    <button class="bb-open-btn has-profile" onclick="openSysModal()">✏ MODIFIER</button>
+  `;
+}
+
+// ════════════════════════════════════════════════════════════════
+// PATCH updateSystemMetrics — plafonds réels SYS
+// ════════════════════════════════════════════════════════════════
+(function(){
+  const _orig = window.updateSystemMetrics;
+  window.updateSystemMetrics = function(){
+    // RAF SAMPLER — drift réel
+    BERG.rafTick(performance.now());
+
+    if (!BERG.isReady()) return _orig && _orig();
+
+    const boost = window.boosting||false;
+    const eco   = window.eco||false;
+    const c     = BERG.ceilings(boost, eco);
+    const t     = Date.now()*.001;
+    const ms    = window.metricState;
+    if (!ms) return _orig && _orig();
+
+    // CPU % — inchangé (0–100 toujours)
+    ms.cpuT = boost ? 72+Math.sin(t*3)*12
+            : eco   ? 18+Math.sin(t*.7)*6
+                    : 38+Math.sin(t*1.3)*22+Math.sin(t*2.1)*8;
+    ms.cpu += (ms.cpuT-ms.cpu)*.05;
+
+    // RAM — plafond = ramGB réel
+    ms.ramT = boost ? c.ramMax*.88+Math.sin(t*.9)*c.ramMax*.1
+            : eco   ? c.ramMax*.28+Math.sin(t*.4)*c.ramMax*.04
+                    : c.ramMax*.47+Math.sin(t*.7)*c.ramMax*.14;
+    ms.ram += (ms.ramT-ms.ram)*.04;
+
+    // GPU RAM — plafond = vramGB réel
+    ms.gpuramT = boost ? c.gpuramMax*.85+Math.sin(t*1.1)*c.gpuramMax*.1
+               : eco   ? c.gpuramMax*.24+Math.sin(t*.5)*c.gpuramMax*.04
+                       : c.gpuramMax*.48+Math.sin(t*.9)*c.gpuramMax*.2;
+    ms.gpuram += (ms.gpuramT-ms.gpuram)*.04;
+
+    // FPS — plafond = fps réel de l'écran
+    ms.gpurenderT = boost ? c.fpsMax*.97+Math.sin(t*4)*c.fpsMax*.03
+                  : eco   ? c.fpsMax*.32+Math.sin(t)*c.fpsMax*.04
+                          : c.fpsMax*.6+Math.sin(t*2)*c.fpsMax*.18+Math.sin(t*.8)*c.fpsMax*.08;
+    ms.gpurender += (ms.gpurenderT-ms.gpurender)*.06;
+
+    // RÉSOLUTION BOOST % — vecteur GPUv
+    const resV   = BERG.gpuvRes();
+    const resBase= Math.sqrt(BERG.getSYS().resPixels||2073600);
+    const resPct = Math.min(Math.round((resV/resBase)*100), 999);
+    ms.gpuresT = boost ? Math.min(resPct*1.35,999) : eco ? resPct*.6 : resPct*.92;
+    ms.gpures += (ms.gpuresT-ms.gpures)*.03;
+    if(ms.gpures>999) ms.gpures=999;
+
+    // DOM
+    const cpu=Math.round(ms.cpu), ram=ms.ram.toFixed(1),
+          gr=ms.gpuram.toFixed(1), fps=Math.round(ms.gpurender), res=Math.round(ms.gpures);
+    const $=id=>document.getElementById(id);
+    const set=(id,v)=>{const e=$(id);if(e)e.textContent=v;};
+
+    set('cpuVal',cpu); set('ramVal',ram); set('gpuRamVal',gr);
+    set('gpuRenderVal',fps); set('gpuResVal',res);
+
+    set('cpuTrend', cpu>80?'🔴 HIGH LOAD':cpu>50?'🟡 ACTIVE':'🟢 OPTIMAL');
+    set('ramTrend',     `/ ${c.ramMax} GB RÉEL`);
+    set('gpuRamTrend',  `/ ${c.gpuramMax} GB VRAM RÉEL`);
+    set('gpuRenderTrend', fps>=c.fpsMax*.9?'⚡ @OMEGA FPS':fps>=c.fpsMax*.6?'✓ SMOOTH':'⚠ LOW FPS');
+    set('gpuResTrend', res>300?'⚡ @OMEGA LEVEL':res>150?'✓ BOOSTED':'BASE LEVEL');
+
+    if(typeof updateRing==='function'){
+      updateRing('cpuRing','cpuRingTxt', cpu, 100, cpu+'%');
+      updateRing('ramRing','ramRingTxt', parseFloat(ram), c.ramMax, ram+'G');
+      updateRing('gpuramRing','gpuramRingTxt', parseFloat(gr), c.gpuramMax, gr+'G');
+      updateRing('gpurenderRing','gpurenderRingTxt', fps, c.fpsMax, fps+'');
+      updateRing('gpuresRing','gpuresRingTxt', Math.min(res,999), 999, res+'%');
+    }
+  };
+})();
+
+// ════════════════════════════════════════════════════════════════
+// PATCH renderMotors — GO/s vectoriels par affinité nœud
+// ════════════════════════════════════════════════════════════════
+(function(){
+  const _orig = window.renderMotors;
+  window.renderMotors = function(boost=false, eco=false){
+    if (BERG.isReady() && window.MV && window.MOTORS) {
+      MOTORS.forEach((m,i)=>{
+        const v = BERG.motorVals(i, boost, eco);
+        MV[i].gos = v.gos;
+        MV[i].pct = v.pct;
+      });
+    }
+    return _orig && _orig(boost, eco);
+  };
+})();
+
+// ════════════════════════════════════════════════════════════════
+// PATCH toggleBoost / toggleEco — sync mode banner
+// ════════════════════════════════════════════════════════════════
+(function(){
+  const _origB = window.toggleBoost;
+  const _origE = window.toggleEco;
+  window.toggleBoost = function(){
+    _origB && _origB();
+    setTimeout(refreshBanner, 50);
+  };
+  window.toggleEco = function(){
+    _origE && _origE();
+    setTimeout(refreshBanner, 50);
+  };
+})();
+
+// ════════════════════════════════════════════════════════════════
+// ALWAYS BETTER LOOP — accumulation PAWA permanente
+// RAF loop réel → driftMs réel → thermalJoules réel → PAWA réel
+// ════════════════════════════════════════════════════════════════
+let _rafFrame = 0;
+function bergAlwaysBetterLoop(now) {
+  BERG.rafTick(now);
+  _rafFrame++;
+
+  // Toutes les 60 frames (~1s) → tick PAWA + update banner
+  if (_rafFrame % 60 === 0) {
+    BERG.tickPAWA();
+    refreshBanner();
+
+    // Update PAWA_BANK bar (always-better indicator)
+    const pct = (BERG.getSYS().pawaBank / 1e9) * 100;
+    const bar = document.getElementById('pawaBetter');
+    if (bar) bar.style.width = Math.max(pct, 0.01) + '%';
+
+    // Update boostVal avec la valeur BERG réelle (GO/s)
+    const bv = document.getElementById('boostVal');
+    if (bv && BERG.isReady()) {
+      const gosVal = BERG.pawaEMP() * 99;
+      bv.textContent = Math.min(gosVal, 9999).toFixed(2);
+    }
+  }
+
+  requestAnimationFrame(bergAlwaysBetterLoop);
+}
+requestAnimationFrame(bergAlwaysBetterLoop);
+
+// ════════════════════════════════════════════════════════════════
+// MODAL HANDLERS
+// ════════════════════════════════════════════════════════════════
+function openSysModal() {
+  document.getElementById('sysModal').classList.add('open');
+  loadModalFromSYS();
+}
+function closeSysModal() {
+  document.getElementById('sysModal').classList.remove('open');
+}
+
+function loadModalFromSYS() {
+  const s = BERG.getSYS();
+  const $=id=>document.getElementById(id);
+  if(s.cores)    $('sm_cores').value = s.cores;
+  if(s.freq)     $('sm_freq').value  = s.freq;
+  if(s.tdpW)   { $('sm_tdp').value   = s.tdpW;  $('sm_tdp_d').textContent  = s.tdpW+'W'; }
+  if(s.vramGB)   $('sm_vram').value  = s.vramGB;
+  if(s.gtdpW)  { $('sm_gtdp').value  = s.gtdpW; $('sm_gtdp_d').textContent = s.gtdpW+'W'; }
+  if(s.fps)      $('sm_fps').value   = s.fps;
+  if(s.pawaBank) $('sm_pawa').value  = s.pawaBank;
+
+  // RAM
+  if(s.ramGB) {
+    $('sm_ram').value = s.ramGB;
+    $('sm_ram').classList.add('ok');
+    $('sm_ramBtn').classList.add('ok');
+    $('sm_ramBtn').textContent = '✅';
+    $('sm_ramBlock').classList.add('ok');
+    $('sm_ramBadge').textContent = 'OK';
+  }
+  bergRecalc();
+}
+
+// RAM confirmation modal
+function onSMRamInput() {
+  const v = parseFloat(document.getElementById('sm_ram').value);
+  const block = document.getElementById('sm_ramBlock');
+  block.classList.remove('ok');
+  document.getElementById('sm_ramBtn').classList.remove('ok');
+  document.getElementById('sm_ramBtn').textContent = '✓ OK';
+  document.getElementById('sm_ram').classList.remove('ok');
+  document.getElementById('sm_ramBadge').textContent = 'REQUIS';
+  bergRecalc();
+}
+function confirmSMRam() {
+  const v = parseFloat(document.getElementById('sm_ram').value);
+  if (!v || v<1 || v>2048) return;
+  BERG.setRam(v);
+  document.getElementById('sm_ramBlock').classList.add('ok');
+  document.getElementById('sm_ramBtn').classList.add('ok');
+  document.getElementById('sm_ramBtn').textContent = '✅';
+  document.getElementById('sm_ram').classList.add('ok');
+  document.getElementById('sm_ramBadge').textContent = 'OK';
+  bergRecalc();
+}
+function setSMRamPreset(gb) {
+  document.getElementById('sm_ram').value = gb;
+  confirmSMRam();
+}
+function applyBERGPreset() {
+  const key = document.getElementById('sm_type').value;
+  const p = {
+    iphone15:    {cores:6,  freq:3.78,tdpW:7,  vramGB:8,  fps:120,gtdpW:15,  res:2556*1179},
+    iphone14:    {cores:6,  freq:3.46,tdpW:6,  vramGB:6,  fps:60, gtdpW:12,  res:2532*1170},
+    macbook_m3:  {cores:12, freq:4.05,tdpW:35, vramGB:18, fps:120,gtdpW:35,  res:3024*1964},
+    macbook_m1:  {cores:8,  freq:3.2, tdpW:20, vramGB:8,  fps:60, gtdpW:20,  res:2560*1600},
+    gaming_mid:  {cores:8,  freq:3.8, tdpW:65, vramGB:8,  fps:144,gtdpW:170, res:8294400},
+    gaming_high: {cores:24, freq:5.8, tdpW:253,vramGB:24, fps:240,gtdpW:450, res:8294400},
+    laptop:      {cores:8,  freq:2.8, tdpW:45, vramGB:4,  fps:60, gtdpW:80,  res:2073600},
+  }[key];
+  if (!p) return;
+  const $=id=>document.getElementById(id);
+  $('sm_cores').value=p.cores; $('sm_freq').value=p.freq;
+  $('sm_tdp').value=p.tdpW; $('sm_tdp_d').textContent=p.tdpW+'W';
+  $('sm_vram').value=p.vramGB;
+  $('sm_gtdp').value=p.gtdpW; $('sm_gtdp_d').textContent=p.gtdpW+'W';
+  $('sm_fps').value=p.fps;
+  // RAM reset → doit re-confirmer
+  $('sm_ram').value=''; $('sm_ram').classList.remove('ok');
+  $('sm_ramBtn').classList.remove('ok'); $('sm_ramBtn').textContent='✓ OK';
+  $('sm_ramBlock').classList.remove('ok'); $('sm_ramBadge').textContent='REQUIS';
+  bergRecalc();
+}
+
+// Live preview dans le modal
+function bergRecalc() {
+  // Sync SYS depuis form (sauf RAM qui nécessite confirmation)
+  const $=id=>document.getElementById(id);
+  const v=id=>parseFloat($('sm_'+id).value)||0;
+  const cur = BERG.getSYS();
+  BERG.setSYS({
+    cores: v('cores')||cur.cores,
+    freq:  v('freq')||cur.freq,
+    tdpW:  parseFloat($('sm_tdp').value)||cur.tdpW,
+    vramGB:v('vram')||cur.vramGB,
+    gtdpW: parseFloat($('sm_gtdp').value)||cur.gtdpW,
+    fps:   v('fps')||cur.fps,
+    resPixels: parseInt($('sm_res').value)||cur.resPixels,
+    pawaBank:  parseFloat($('sm_pawa').value)||cur.pawaBank,
+  });
+  // Mettre à jour l'affichage du slider PAWA
+  const pb = $('sm_pawa_d');
+  if(pb){
+    const pw = parseFloat($('sm_pawa').value)||0;
+    pb.textContent = pw>=1e9?'@OMEGA':pw>=1e6?(pw/1e6).toFixed(1)+'M':pw>=1e3?(pw/1e3).toFixed(0)+'K':pw.toFixed(0);
+  }
+
+  // Preview vecteurs
+  const prev = $('sm_preview');
+  if (!prev) return;
+  if (!BERG.isReady()) {
+    prev.innerHTML = `<span style="color:rgba(255,68,68,.5)">⚠ RAM non confirmée — vecteurs bloqués</span>`;
+    return;
+  }
+  const mode = window.boosting?'BOOST':window.eco?'ECONOMY':'BERG';
+  const sc   = BERG.score().toFixed(1);
+  const pf   = BERG.pawFactor().toFixed(8);
+  const cr   = (BERG.cpuvRAM(mode)||0).toFixed(1);
+  const gf   = Math.round(BERG.gpuvFPS(mode)||0);
+  const gv   = (BERG.gpuvVRAM(mode)||0).toFixed(1);
+  const gr   = BERG.gpuvRes();
+  const te   = BERG.thermalJoules().toFixed(4);
+  const pe   = BERG.pawaEMP().toFixed(4);
+  const sys  = BERG.getSYS();
+
+  prev.innerHTML = `
+<span style="color:rgba(255,215,0,.5)">⬡ VECTEURS BERG · MODE ${mode} · thermalJ = ${te} J | PAWA_EMP = ${pe} WA | pf = ${pf}</span>
+<span style="color:#00E5FF">CPUv RAM  → <strong style="color:#FFD700">${cr} GB/s</strong>  [${sys.ramGB}GB × split.cpuv(${({ECONOMY:30,BERG:25,BOOST:20}[mode])}%) × pf × ×10]</span>
+<span style="color:#00E5FF">GPUv VRAM → <strong style="color:#FFD700">${gv} GB/s</strong>  [${sys.vramGB}GB × split.gpuv(${({ECONOMY:5,BERG:25,BOOST:13}[mode])}%) × pf × ×10]</span>
+<span style="color:#00E676">GPUv FPS  → <strong>${gf} FPS</strong>   [${sys.fps}Hz × split.gpu(${({ECONOMY:10,BERG:25,BOOST:34}[mode])}%) × pf × ×10]</span>
+<span style="color:#fff">GPUv RES  → <strong>${gr}×${gr} px</strong> [√(${sys.resPixels}) × pf → vers 3000×3000]</span>
+<span style="color:#FFD700">Score effectualisation → <strong>${sc}%</strong> ${parseFloat(sc)>=100?'🔴 SUPRA-HARDWARE':parseFloat(sc)>=60?'⚡ VIP':'🔵 FREEMIUM'}</span>
+  `.trim().split('\n').map(l=>`<div>${l}</div>`).join('');
+}
+
+// ════════════════════════════════════════════════════════════════
+// APPLY PROFILE → dashboard + motors
+// ════════════════════════════════════════════════════════════════
+function bergApplyProfile() {
+  if (!BERG.isReady()) {
+    alert('⚠ Confirmez votre RAM réelle avant d\'appliquer.');
+    return;
+  }
+  BERG.save();
+  // Recalibrer motors avec les vraies valeurs
+  if (window.MV && window.MOTORS) {
+    window.renderMotors(window.boosting||false, window.eco||false);
+  }
+  refreshBanner();
+  closeSysModal();
+}
+
+// ════════════════════════════════════════════════════════════════
+// JSON EXPORT
+// ════════════════════════════════════════════════════════════════
+function bergExportJSON() {
+  const sys  = BERG.getSYS();
+  const mode = window.boosting?'BOOST':window.eco?'ECONOMY':'BERG';
+  const payload = {
+    meta: {
+      version: '5.0',
+      lab: 'Just Keff Tech Labs',
+      system: 'GoleMotor · SuperS.A.M',
+      exported: new Date().toISOString(),
+      mode
+    },
+    hardware: sys,
+    vectors: {
+      cpuvRAM_GBps:  BERG.cpuvRAM(mode),
+      gpuvVRAM_GBps: BERG.gpuvVRAM(mode),
+      gpuvFPS:       BERG.gpuvFPS(mode),
+      gpuvRes_px:    BERG.gpuvRes(),
+      thermalJoules: BERG.thermalJoules(),
+      pawaEMP_WA:    BERG.pawaEMP(),
+      pawaFactor:    BERG.pawFactor(),
+      effectuation_pct: BERG.score(),
+    },
+    splits: {
+      ECONOMY: {cpu:'55%',cpuv:'30%',gpu:'10%',gpuv:'5%'},
+      BERG:    {cpu:'25%',cpuv:'25%',gpu:'25%',gpuv:'25%'},
+      BOOST:   {cpu:'33%',cpuv:'20%',gpu:'34%',gpuv:'13%'},
+    },
+    motors: (window.MOTORS||[]).map((m,i)=>{
+      const v = BERG.motorVals(i, window.boosting||false, window.eco||false);
+      return { n:m.n, name:m.name, tier:m.tier, status:m.s,
+               gos_vec: v.gos, pct_vec: v.pct };
+    }),
+    pawa_bank: {
+      current_WA: sys.pawaBank,
+      omega_WA: 1e9,
+      progress_pct: (sys.pawaBank/1e9*100).toFixed(6),
+      distance_to_omega: 1e9 - sys.pawaBank,
+    }
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {type:'application/json'});
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement('a');
+  a.href = url;
+  a.download = `golemotor_sys_${Date.now()}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+
+  // Flash confirmation
+  const f = document.getElementById('exportFlash');
+  if (f) { f.style.opacity='1'; setTimeout(()=>f.style.opacity='0', 2500); }
+}
+
+// ════════════════════════════════════════════════════════════════
+// AUTO-DETECT — browser APIs
+// ════════════════════════════════════════════════════════════════
+async function bergAutoDetect() {
+  const btn = document.querySelector('.sm-btn-detect');
+  if (btn) { btn.textContent='🔄 DÉTECTION...'; btn.disabled=true; }
+
+  const upd = {};
+
+  // CPU cores
+  const cores = navigator.hardwareConcurrency || 0;
+  if (cores) upd.cores = cores;
+
+  // GPU via WebGL
+  try {
+    const gl = document.createElement('canvas').getContext('webgl');
+    if (gl) {
+      const ext = gl.getExtension('WEBGL_debug_renderer_info');
+      const gpu = ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : '';
+      if (gpu) {
+        // VRAM estimation
+        const n = gpu.toLowerCase();
+        upd.vramGB = n.includes('4090')?24:n.includes('4080')?16:
+          n.includes('m3')||n.includes('m2')?18:n.includes('m1')?8:
+          n.includes('a17')?8:n.includes('a15')||n.includes('a16')?6:
+          n.includes('3080')?10:n.includes('3070')?8:n.includes('3060')?8:4;
+        upd.gtdpW = n.includes('4090')?450:n.includes('4080')?320:
+          n.includes('m3')?35:n.includes('m1')?20:
+          n.includes('a17')?12:150;
+      }
+    }
+  } catch(e){}
+
+  // Screen
+  const dpr = window.devicePixelRatio||1;
+  upd.resPixels = Math.round(screen.width*dpr * screen.height*dpr);
+  upd.fps = screen.refreshRate || 60;
+
+  // CPU benchmark → freq estimate
+  const t0 = performance.now();
+  let d=0; for(let i=0;i<5e6;i++) d+=Math.sqrt(i);
+  const bMs = performance.now()-t0;
+  upd.freq = Math.min(Math.max(((5e6/bMs)/200000*Math.sqrt(cores||4)).toFixed(2),0.5),6);
+
+  // TDP estimate from cores
+  upd.tdpW = Math.min(Math.max((cores||4)*8, 15), 253);
+
+  // Battery
+  if ('getBattery' in navigator) {
+    try { const bat = await navigator.getBattery(); } catch(e){}
+  }
+
+  // Apply (sauf RAM → toujours manuelle)
+  BERG.setSYS(upd);
+  const $=id=>document.getElementById(id);
+  if(upd.cores) $('sm_cores').value=upd.cores;
+  if(upd.freq)  $('sm_freq').value=upd.freq;
+  if(upd.vramGB) $('sm_vram').value=upd.vramGB;
+  if(upd.fps)   $('sm_fps').value=upd.fps;
+  if(upd.tdpW)  { $('sm_tdp').value=upd.tdpW; $('sm_tdp_d').textContent=upd.tdpW+'W'; }
+  if(upd.gtdpW) { $('sm_gtdp').value=upd.gtdpW; $('sm_gtdp_d').textContent=upd.gtdpW+'W'; }
+
+  // RAM → laisser vide obligatoirement
+  $('sm_ram').value='';
+  $('sm_ramBlock').classList.remove('ok');
+  $('sm_ram').classList.remove('ok');
+  $('sm_ramBtn').textContent='✓ OK';
+  $('sm_ramBadge').textContent='REQUIS';
+
+  bergRecalc();
+  if (btn) { btn.textContent='✅ DÉTECTÉ'; btn.disabled=false; }
+}
+
+// ════════════════════════════════════════════════════════════════
+// CROSS-TAB SYNC — si profiler.html est dans un autre onglet
+// ════════════════════════════════════════════════════════════════
+window.addEventListener('storage', e => {
+  if (e.key === 'golemotor_sys_v5' && e.newValue) {
+    try {
+      const d = JSON.parse(e.newValue);
+      BERG.setSYS(d);
+      refreshBanner();
+      if (window.MV && window.MOTORS) {
+        window.renderMotors(window.boosting||false, window.eco||false);
+      }
+    } catch(_){}
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', function(){
+  injectBanner();
+  // Si profil déjà en localStorage → recalibrer immédiatement
+  if (BERG.isReady() && window.MV && window.MOTORS) {
+    window.renderMotors(false, false);
+  }
+  bergRecalc();
+});
+
+// Fallback si DOMContentLoaded déjà passé
+if (document.readyState !== 'loading') {
+  injectBanner();
+  if (BERG.isReady() && window.MV && window.MOTORS) {
+    window.renderMotors(false, false);
+  }
+}
+
+
 </script>
 
 </body>
