@@ -10,7 +10,7 @@
 
 :root {
 –black: #000000;
-–white: #f5f0e8;
+–white: #d4af37;
 –gold: #d4af37;
 –gold-light: #f0d060;
 –gold-dim: #7a6219;
@@ -26,9 +26,9 @@
 –green: #39ff14;
 –green-dim: #0e4d05;
 –bg: #000000;
-–surface: #080808;
-–surface2: #0e0e0e;
-–surface3: #141414;
+–surface: #000000;
+–surface2: #030303;
+–surface3: #050505;
 –border: #1c1c1c;
 –border-gold: rgba(212,175,55,0.35);
 –border-cyan: rgba(0,255,231,0.25);
@@ -223,15 +223,277 @@ z-index: 100;
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html { scroll-behavior: smooth; }
+html {
+scroll-behavior: smooth;
+background: #000 !important;
+}
 
 body {
-background: var(–bg);
-color: var(–white);
+background: #000000 !important;
+color: var(–gold) !important;
 font-family: var(–font-body);
 font-size: 15px;
 line-height: 1.6;
 overflow-x: hidden;
+}
+
+/* ══ FORCE NOIR SUR TOUT ══════════════════════════════════ */
+.wrapper,
+.panel,
+.card,
+.motor-card,
+.calc-container,
+.result-box,
+.info-block,
+.section-article,
+.diff-section,
+.matrix-display,
+.pawa-bank-container,
+.omega-indicator,
+.live-metric,
+.metric-box,
+.bridge-node,
+.split-node,
+.datacron-cell,
+.state-node,
+.formula-table tr,
+.formula-table td,
+.tier-table tr,
+.tier-table td,
+.trinity-card,
+.roadmap-step,
+.rate-cell,
+.conv-live,
+.vault-box,
+.wallet-box,
+.berg-crypto-article,
+footer,
+footer .wrapper {
+background: #000000 !important;
+color: var(–gold) !important;
+}
+
+/* ══ TEXTES PAR DÉFAUT ════════════════════════════════════ */
+p, div, span, li, td, th, label, select, option {
+color: var(–gold);
+}
+
+/* ══ TEXTE MUTED → OR SOMBRE ══════════════════════════════ */
+.text-muted, [style*=“color: var(–text-muted)”],
+.motor-desc, .motor-num, .motor-tag,
+.metric-label, .metric-formula,
+.r-label, .matrix-key,
+.road-desc, .rate-lbl, .conv-unit,
+.article-body, .crypto-body,
+.article-divider,
+.footer-text {
+color: #7a6219 !important;
+}
+
+/* ══ TITRES ET VALEURS → OR MIROIR ═══════════════════════ */
+h1, h2, h3,
+.sec-heading,
+.sec-title,
+.motor-name,
+.vault-amount,
+.wallet-amount,
+.omega-value,
+.live-val,
+.metric-value,
+.bridge-num,
+.split-pct.cpu,
+.article-title,
+.crypto-title,
+.calc-title,
+.road-title {
+color: var(–gold-mirror, #f5d060) !important;
+text-shadow: 0 0 14px rgba(245,208,96,0.25) !important;
+}
+
+/* ══ VALEURS CYAN → JADE ══════════════════════════════════ */
+.r-val,
+.metric-value:not(.gold):not(.violet):not(.green),
+.live-val:not([style]),
+.range-display,
+.matrix-val,
+.result-line .r-val {
+color: var(–jade-fluo, #00ff88) !important;
+text-shadow: 0 0 8px rgba(0,255,136,0.2) !important;
+}
+
+/* ══ ROUGE FLUO SUR MOTS CLÉS ════════════════════════════ */
+mark,
+.article-eyebrow,
+.crypto-eyebrow,
+.road-phase,
+.vault-unit,
+.motor-tag-pill {
+color: var(–red-fluo, #ff2244) !important;
+background: transparent !important;
+text-shadow: 0 0 8px rgba(255,34,68,0.3) !important;
+}
+
+/* ══ INPUTS + SELECTS NOIRS ══════════════════════════════ */
+input[type=range],
+input[type=number],
+select,
+.vault-input {
+background: #050505 !important;
+color: var(–gold-mirror, #f5d060) !important;
+border-color: #1a1a1a !important;
+}
+input[type=range]:focus,
+input[type=number]:focus,
+select:focus { border-color: var(–gold-dim) !important; }
+
+input[type=range]::-webkit-slider-thumb { background: var(–gold) !important; }
+
+/* ══ TABLES ════════════════════════════════════════════════ */
+.formula-table th,
+.tier-table th {
+background: #050505 !important;
+color: var(–gold-dim) !important;
+border-color: #111 !important;
+}
+.formula-table td,
+.tier-table td {
+background: #000 !important;
+border-color: #0d0d0d !important;
+}
+.formula-table tr:hover td,
+.tier-table tr:hover td {
+background: #080808 !important;
+}
+.formula-table td:first-child { color: var(–jade-fluo, #00ff88) !important; }
+.formula-table td:nth-child(2) { color: var(–gold-mirror, #f5d060) !important; }
+.tier-table td.free  { color: var(–jade-fluo, #00ff88) !important; }
+.tier-table td.vip   { color: var(–gold-mirror, #f5d060) !important; }
+.tier-table td.omega { color: var(–gold, #d4af37) !important; text-shadow: 0 0 8px rgba(212,175,55,0.3); }
+
+/* ══ SÉPARATEURS ═══════════════════════════════════════════ */
+.article-divider {
+background: linear-gradient(90deg,transparent,var(–gold-dim),var(–jade-fluo,#00ff88),var(–red-fluo,#ff2244),transparent) !important;
+}
+.result-line { border-color: #0d0d0d !important; }
+
+/* ══ BORDERS DES CARDS ══════════════════════════════════════ */
+.card, .motor-card { border-color: #111 !important; }
+.card:hover, .motor-card:hover { border-color: var(–gold-dim) !important; }
+.card-gold { border-color: #2a1e05 !important; }
+.card-cyan  { border-color: #002a24 !important; }
+
+/* ══ TAGS MOTEURS ════════════════════════════════════════════ */
+.motor-tag-pill {
+border-color: #1a0a00 !important;
+background: #020202 !important;
+}
+
+/* ══ BOUTONS CALC ════════════════════════════════════════════ */
+.btn-calc {
+background: #000 !important;
+border-color: var(–gold-dim) !important;
+color: var(–gold-mirror, #f5d060) !important;
+}
+.btn-calc:hover {
+background: #0a0800 !important;
+border-color: var(–gold) !important;
+box-shadow: 0 0 20px rgba(212,175,55,0.2) !important;
+}
+
+/* ══ NAV TABS ════════════════════════════════════════════════ */
+.tab-btn { color: #3a3020 !important; background: #000 !important; }
+.tab-btn:hover { color: var(–jade-fluo, #00ff88) !important; }
+.tab-btn.active { color: var(–gold-mirror, #f5d060) !important; border-bottom-color: var(–gold) !important; }
+
+/* ══ MODE BUTTONS ════════════════════════════════════════════ */
+.mode-btn { background: #000 !important; border-color: #111 !important; color: #333 !important; }
+.mode-btn.economy.active { color: var(–jade-fluo,#00ff88) !important; border-color: #003a20 !important; background: #000a05 !important; }
+.mode-btn.berg.active    { color: var(–gold-mirror,#f5d060) !important; border-color: var(–gold-dim) !important; background: #080600 !important; }
+.mode-btn.boost.active   { color: var(–red-fluo,#ff2244) !important; border-color: #3a0010 !important; background: #0a0005 !important; }
+
+/* ══ INFO BLOCKS ══════════════════════════════════════════════ */
+.info-block { background: #000 !important; border-left-color: var(–gold-dim) !important; }
+.info-block.cyan { background: #000 !important; border-left-color: #003a30 !important; }
+.info-block .quote { color: var(–gold-mirror, #f5d060) !important; }
+
+/* ══ LANG BUTTONS ════════════════════════════════════════════ */
+.lang-btn { background: #000 !important; border-color: #111 !important; color: #2a2a2a !important; }
+.lang-btn:hover  { color: var(–gold) !important; border-color: var(–gold-dim) !important; }
+.lang-btn.active { color: var(–gold-mirror,#f5d060) !important; border-color: var(–gold) !important; background: #080600 !important; }
+
+/* ══ MOTOR BAR ════════════════════════════════════════════════ */
+.motor-bar { background: #080808 !important; }
+
+/* ══ PAWA BAR ══════════════════════════════════════════════════ */
+.pawa-bar { background: #050505 !important; border-color: #111 !important; }
+
+/* ══ CANAL TUBE ════════════════════════════════════════════════ */
+.canal-tube { background: #030303 !important; border-color: #0d0d0d !important; }
+
+/* ══ TRANSMUT BAR ══════════════════════════════════════════════ */
+.transmut-bar { background: #050505 !important; border-color: #0d0d0d !important; }
+
+/* ══ RÉSULTATS BOX ══════════════════════════════════════════════ */
+.result-box { background: #020202 !important; border-color: #0d0d0d !important; }
+
+/* ══ JACOBIAN CELLS ════════════════════════════════════════════ */
+.jacobian-cell { background: #030303 !important; }
+.jacobian-cell.header { color: var(–gold-dim) !important; }
+.jacobian-cell.value  { color: var(–jade-fluo,#00ff88) !important; }
+.jacobian-cell.partial{ color: var(–red-fluo,#ff2244) !important; }
+
+/* ══ SPLIT NODES ═══════════════════════════════════════════════ */
+.split-node { background: #020202 !important; border-color: #0d0d0d !important; }
+.split-node-name { color: #3a3020 !important; }
+
+/* ══ MATRIX ROWS ═══════════════════════════════════════════════ */
+.matrix-display { background: #000 !important; border-color: #0d0d0d !important; }
+.matrix-row { border-color: #0a0a0a !important; }
+.matrix-partial { color: var(–red-fluo,#ff2244) !important; }
+.matrix-second  { color: var(–jade-fluo,#00ff88) !important; }
+
+/* ══ LIVE METRIC ═══════════════════════════════════════════════ */
+.live-metric  { background: #020202 !important; border-color: #0d0d0d !important; }
+.live-lbl     { color: #3a3020 !important; }
+
+/* ══ OMEGA INDICATOR ═══════════════════════════════════════════ */
+.omega-indicator { background: #000 !important; border-color: var(–gold-dim) !important; }
+.omega-sub { color: var(–gold-dim) !important; }
+
+/* ══ BRIDGE NODES ══════════════════════════════════════════════ */
+.bridge-node { background: #020202 !important; border-color: #0d0d0d !important; }
+.bridge-node.unlocked { background: #060500 !important; border-color: var(–gold-dim) !important; }
+.bridge-node.omega    { background: #0a0800 !important; border-color: var(–gold) !important; }
+.bridge-mult { color: #3a3020 !important; }
+
+/* ══ STATE NODES ═══════════════════════════════════════════════ */
+.state-node   { background: #020202 !important; border-color: #0d0d0d !important; }
+.state-label  { color: #3a3020 !important; }
+.state-pawa   { color: #1a1a1a !important; }
+
+/* ══ DIFF SECTION ══════════════════════════════════════════════ */
+.diff-section    { background: #000 !important; border-color: #002a24 !important; }
+.diff-formula-display { background: #000 !important; color: var(–gold-mirror,#f5d060) !important; border-color: #0d0d0d !important; }
+
+/* ══ TRINITY CARDS ═════════════════════════════════════════════ */
+.trinity-card { background: #000 !important; }
+.trinity-name { color: #3a3020 !important; }
+.trinity-formula { background: #020202 !important; color: var(–gold-mirror,#f5d060) !important; }
+.trinity-desc { color: #4a4030 !important; }
+
+/* ══ FOOTER ════════════════════════════════════════════════════ */
+footer { background: #000 !important; border-color: #0d0d0d !important; }
+.footer-text { color: var(–gold-dim) !important; }
+.footer-text .gold { color: var(–gold-mirror,#f5d060) !important; }
+
+/* ══ SCROLLBAR ═════════════════════════════════════════════════ */
+::-webkit-scrollbar-track { background: #000 !important; }
+::-webkit-scrollbar-thumb { background: #1a1000 !important; }
+
+/* ══ SURFACE OVERRIDES ═════════════════════════════════════════ */
+[style*=“background: var(–surface”],
+[style*=“background:var(–surface”] {
+background: #000 !important;
 }
 
 /* ═══════════════════════════════════════════ CANVAS BG */
